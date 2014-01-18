@@ -1,12 +1,17 @@
 #!/bin/sh
 # author:tracyone,tracyone@live.cn
-# description:这个小脚本的功能快速切换mac地址和ip地址.
+# description:
+	# 个小脚本的功能快速切换切换网络配置，包括mac地址、IP地址和DNS
 	# 1,用户可以迅速的切换到任意配置好的ip配置上
 	# 2,用户可以迅速恢复到最初的ip配置上
 	# 3,用户可以在配置界面上添加/删除一个新的配置，也可以直接修改配置文件
+	# 4,此脚本将支持windows xp、windows 7、ubuntu及其衍生版和debian及其衍生版
 	# 配置文件的格式:新一行以#开头的为注释，所有注释会被忽略,所有空行会被忽略
 	# 配置名:IP地址:MAC地址:DNS
-# history:2014-01-17/22:37:25 windows xp测试成功
+	# 你可以通过这条命令获得最新版本:git clone https://github.com/tracyone/shell_script.git
+# history:
+	# 2014-01-17/22:37:25 windows xp测试成功
+	# 2014-01-18/18:01:55 ubuntu 10.04 lucid 测试成功
 
 # {{{环境变量接口
 ORIG_IFUPDOWN_CFG="/etc/network/interfaces.org" #此文件是ifdownup命令的配置文件的备份文件为了统一windows下同样使用这个文件..
@@ -27,14 +32,15 @@ TEMP_FILE="./temp_file"
 
 # {{{函数接口
 
-#获取字符串长度..
+#{{{ 获取字符串长度..
 #接受一个参数,就是字符串..
 function get_str_len()
 {
 	echo ${#1}
 }
+#}}}
 
-#检测操作系统类型..
+#{{{ 检测操作系统类型..
 #返回Unix或者Nt+版本，例如Nt5.1
 function get_os_type()
 {
@@ -47,13 +53,17 @@ function get_os_type()
 		echo "Nt${nt_ver}"
 	fi
 }
+#}}}
 
+#{{{ clear screen
 function clear_screen()
 {
 	# clear screen
 	echo -e "\e[2J\e[1;1H"
 }
-# 返回当前网络链接的mac地址的字符串...
+#}}}
+
+#{{{  返回当前网络链接的mac地址的字符串...
 # 结果的形式是:08:00:00:00:00:01
 function get_mac_address()
 {
@@ -67,8 +77,9 @@ function get_mac_address()
 	fi
 	echo "${mac_address}"
 }
+#}}}
 
-#获取当前网络链接的ip地址
+#{{{ 获取当前网络链接的ip地址
 #如果为dhcp则返回空...
 function get_ip_addr()
 {
@@ -86,8 +97,9 @@ function get_ip_addr()
 		echo ""
 	fi
 }
+#}}}
 
-#获取当前网络链接的掩码
+#{{{ 获取当前网络链接的掩码
 #如果为dhcp则返回空...
 function get_netmask()
 {
@@ -105,8 +117,9 @@ function get_netmask()
 		echo ""
 	fi
 }
+#}}}
 
-#获取当前网络链接的网关
+#{{{ 获取当前网络链接的网关
 #如果为dhcp则返回空...
 function get_gw()
 {
@@ -124,8 +137,9 @@ function get_gw()
 		echo ""
 	fi
 }
+#}}}
 
-# 下面函数用于添加网络配置文件到${CUR_NETWORK_CFG}中..
+#{{{  下面函数用于添加网络配置文件到${CUR_NETWORK_CFG}中..
 function add_cfg()
 {
 	clear_screen
@@ -153,8 +167,9 @@ function add_cfg()
 		fi
 	done
 }
+#}}}
 
-# windows only
+#{{{  获取当前工作网卡在注册表的位置.windows only
 # 返回当前网卡在注册表的相对位置，具体来说就是HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}下一级的数字
 function get_pos_of_mac_in_reg()
 {
@@ -177,43 +192,9 @@ function get_pos_of_mac_in_reg()
 	done
 	echo ${temp_num_str}
 }
+#}}}
 
-# 通过修改注册表来修改我们的网卡mac地址....具体来说就是:
-# HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}下对应的文件夹
-# 其中键:Networkaddress表示的网卡地址，其中Netcfginstanceid:表示每个网卡唯一的GUID
-# 这个函数接受一个参数代表mac地址以16进制的形式来表示，例如345612780017
-# 成功返回0，否则非0,1代表传入字符长度不符合，2代表有非法字符，3代表找不到网卡..
-function set_mac_addr()
-{
-	echo "Setting mac address $1 ..."
-	if [[ $(get_os_type) == "Unix" ]]; then
-		if [[ "$(cat ${IFUPDOWN_CFG} | grep "^ *auto .*$(get_netcard_name)" )" == "" ]]; then
-			sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
-			sudo echo -e "hwaddress $1" >> ${IFUPDOWN_CFG}
-		else
-			# 配置中出现该网卡的配置，那么我们将强制改为静态
-			# 插入iface语句并设置了静态
-			sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *iface.*/iface $(get_netcard_name) inet static/}" ${IFUPDOWN_CFG}
-			# 判断是否存在hwaddress关键字，不存在的话在在第二个auto的前一行插入address及其ip地址..和默认netmask
-			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *address.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -e "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\nhwaddress $1/g}" ${IFUPDOWN_CFG}
-			else
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *hwaddress.*/hwaddress $1/}" ${IFUPDOWN_CFG}
-			fi
-		fi
-	else
-		echo "Searching interface guid.."
-		temp_num_str=$(cat ${ORIG_IFUPDOWN_CFG} | grep reg_pos_of_mac | cut -d ';' -f2)
-		if [[ ${temp_num_str} == "" || ! -s ${ORIG_IFUPDOWN_CFG} ]]; then
-			temp_num_str=$(get_pos_of_mac_in_reg)
-		fi
-		#mac_address=${mac_address//:/} #去掉冒号.. 
-		reg add HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Class\\\{4D36E972-E325-11CE-BFC1-08002bE10318\}\\$temp_num_str //v  NetworkAddress //d ${1//:/} //f
-	fi
-	return 0
-}
-
-# 此函数的作用是读取固定格式的文本里面的一个field
+#{{{  此函数的作用是读取固定格式的文本里面的一个field
 # 接受3个参数，$1为文本的所在路径和名字,$2是读取第几行,$3是读取这一行的第几个域
 # 返回一个参数用于返回该字段的内容
 function read_a_field_of_conf()
@@ -222,8 +203,9 @@ function read_a_field_of_conf()
 	conf_field=$(grep -v '^ *#' $1 | grep -v '^$' | sed -n "${2}p" | cut -d ';' -f $3) 
 	echo "${conf_field}"
 }
+#}}}
 
-#下面的函数读取配置文件中的指定行的对象名字
+#{{{ 下面的函数读取配置文件中的指定行的对象名字
 # 接受2个参数，$1为文本的所在路径和名字,$2是读取第几行
 # 返回一个参数用于返回该行的名字...
 function read_a_name_of_conf()
@@ -232,19 +214,21 @@ function read_a_name_of_conf()
 	cfg_name=$(read_a_field_of_conf $1 $2 1) #第一个域固定为该行配置的名字，这是人为规定的. 
 	echo "${cfg_name}"
 }
+#}}}
 
-# return the name of netcard name
+#{{{  return the name of netcard name
 function get_netcard_name()
 {
 	if [[ $(get_os_type) == "Unix" ]]; then
-		local net_card_str=$(route -n | sed -n '3p' | awk '{print $8 "\t"}' )
+		local net_card_str=$(ifconfig -a | grep '^eth.*' | awk '{print $1 " "}')
 	else
 		local net_card_str=$(netsh interface ip show address | sed -n '2p' | cut -d '"' -f 2)
 	fi
 	echo "${net_card_str}"
 }
+#}}}
 
-# 判断当前是否为dhcp
+#{{{  判断当前是否为dhcp
 # 如果是返回0,否则非0..
 function is_dhcp()
 {
@@ -260,7 +244,9 @@ function is_dhcp()
 		return 0
 	fi
 }
+#}}}
 
+#{{{ 获得网卡的设备id,windows only
 function get_netcard_id()
 {
 	local temp_num_str=""
@@ -269,8 +255,9 @@ function get_netcard_id()
 	netcatd_id=$(reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\\${temp_num_str}" | grep ComponentId | cut -d '&' -f2 )
 	echo ${netcatd_id}
 }
+#}}}
 
-# 重启网卡..
+#{{{ 重启网卡..
 function reset_netcard()
 {
 	local os_type=$(get_os_type)
@@ -279,7 +266,8 @@ function reset_netcard()
 	if [[ "${os_type}" == "Unix" ]]; then
 		sudo ifdown --force $(get_netcard_name) 
 		sleep 2
-		sudo ifup --force $(get_netcard_name)
+		sudo ifup  --force $(get_netcard_name)
+		sudo resolvconf -u
 	else
 		netcatd_id=$(cat ${ORIG_IFUPDOWN_CFG} | grep netcatd_id | cut -d ';' -f2)
 		if [[ ${netcatd_id} == "" || ! -s ${ORIG_IFUPDOWN_CFG} ]]; then
@@ -295,45 +283,61 @@ function reset_netcard()
 	fi
 	echo "Restart network card $(get_netcard_name) successfully!"
 }
+# }}}
 
-# 设置ip地址..
+#{{{ 设置ip地址以及默认的netmask和自动适应的gateway
 # 接收一个参数,$1:ip地址
-# 顺便提醒一下默认子网掩码这里设置为255.255.255.0
 function set_ip_addr()
 {
 	echo "Setting ip address $1 ..."
 	if [[ $(get_os_type) == "Unix" ]]; then
 		# 配置中不存在该网卡的配置..
-		if [[ "$(cat ${IFUPDOWN_CFG} | grep "^ *auto .*$(get_netcard_name)" )" == "" ]]; then
+		if [[ "$(grep "^ *auto .*$(get_netcard_name)" ${IFUPDOWN_CFG})" == "" ]]; then
 			sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
 			sudo echo -e "address $1" >> ${IFUPDOWN_CFG}
 			sudo echo -e "netmask 255.255.255.0" >> ${IFUPDOWN_CFG}
+			sudo echo -e  "gateway ${1%.*}.1" >> ${IFUPDOWN_CFG}
 		else
 			# 配置中出现该网卡的配置，那么我们将强制改为静态ip地址..
 			# 插入iface语句并设置了静态
 			sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *iface.*/iface $(get_netcard_name) inet static/}" ${IFUPDOWN_CFG}
 			# 判断是否存在address关键字，不存在的话在在第二个auto的前一行插入address及其ip地址..和默认netmask
 			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *address.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -e "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\naddress $1\nnetmask 255.255.255.0/g}" ${IFUPDOWN_CFG}
+				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\naddress $1/g}" ${IFUPDOWN_CFG}
 			else
 				# 如果已经存在了那么匹配address语句并整行替换...
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *address.*/address $1\nnetmask 255.255.255.0/}" ${IFUPDOWN_CFG}
+				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *address.*/address $1/}" ${IFUPDOWN_CFG}
+			fi
+
+			# netmask
+			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *netmask.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\nnetmask 255.255.255.0/g}" ${IFUPDOWN_CFG}
+			else
+				# 如果已经存在了那么匹配address语句并整行替换...
+				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *netmask.*/netmask 255.255.255.0/}" ${IFUPDOWN_CFG}
+			fi
+
+			# gateway
+			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *gateway.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway ${1%.*}.1/g}" ${IFUPDOWN_CFG}
+			else
+				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *gateway.*/gateway ${1%.*}.1/}" ${IFUPDOWN_CFG}
 			fi
 		fi
 	else
 		netsh interface ip set address name="$(get_netcard_name)" static $1 255.255.255.0
 	fi
 }
+# }}}
 
-# 设置dns...
+#{{{ 设置dns...
 # 接受一个参数$1,表示要设置的dns字符串，多个dns之间用空格隔开
 function set_dns()
 {
 	echo "Setting dns $1 ..."
-	local dns_str=$1
 	if [[ "$(get_os_type)" == "Unix" ]]; then
 		# 先判断是否添加了重复的..
-		if [[ "$(cat /etc/resolvconf/resolv.conf.d/base | awk '$2==${dns_str}')" == "" ]]; then
+		if [[ "$(cat /etc/resolvconf/resolv.conf.d/base | grep $1 )" == "" ]]; then
 			# 下面这个文件只有在你的系统安装了resolvconf之后才会出现..
 			sudo echo "nameserver "$1 >> /etc/resolvconf/resolv.conf.d/base
 		fi
@@ -341,14 +345,15 @@ function set_dns()
 		netsh interface ip set dns name="$(get_netcard_name)" source=static addr=$1 register=PRIMARY
 	fi
 }
+#}}}
 
-# 设置网关..
+#{{{ 设置网关..
 # 接收一个参数,$1:网关地址..
 function set_gw()
 {
 	echo "Setting gateway address $1 ..."
 	if [[ $(get_os_type) == "Unix" ]]; then
-		if [[ "$(cat ${IFUPDOWN_CFG} | grep "^ *auto .*$(get_netcard_name)" )" == "" ]]; then
+		if [[ "$(grep "^ *auto .*$(get_netcard_name)" ${IFUPDOWN_CFG})" == "" ]]; then
 			sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
 			sudo echo -e "gateway $1" >> ${IFUPDOWN_CFG}
 		else
@@ -357,7 +362,7 @@ function set_gw()
 			sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *iface.*/iface $(get_netcard_name) inet static/}" ${IFUPDOWN_CFG}
 			# 判断是否存在address关键字，不存在的话在在第二个auto的前一行插入address及其ip地址..和默认netmask
 			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *gateway.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -e "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway $1/g}" ${IFUPDOWN_CFG}
+				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway $1/g}" ${IFUPDOWN_CFG}
 			else
 				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *gateway.*/gateway $1/}" ${IFUPDOWN_CFG}
 			fi
@@ -366,8 +371,9 @@ function set_gw()
 		netsh interface ip set address "$(get_netcard_name)" gateway=$1 gw=1
 	fi
 }
+# }}}
 
-# Unix only
+#{{{ 使能ifupdown Unix only
 # 由ifupdown命令及其配置文件接管网络管理(取代networkmanger)
 function enable_ifupdown()
 {
@@ -379,8 +385,45 @@ function enable_ifupdown()
 		echo Enable ifupdown successfully
 	fi
 }
+# }}}
 
-# 将当前网络链接的参数以一定格式保存在文件中或者从一定格式的文件恢复
+#{{{ 通过修改注册表来修改我们的网卡mac地址....具体来说就是:
+# HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}下对应的文件夹
+# 其中键:Networkaddress表示的网卡地址，其中Netcfginstanceid:表示每个网卡唯一的GUID
+# 这个函数接受一个参数代表mac地址以16进制的形式来表示，例如345612780017
+# 成功返回0，否则非0,1代表传入字符长度不符合，2代表有非法字符，3代表找不到网卡..
+function set_mac_addr()
+{
+	echo "Setting mac address $1 ..."
+	if [[ $(get_os_type) == "Unix" ]]; then
+		if [[ "$(grep "^ *auto .*$(get_netcard_name)" ${IFUPDOWN_CFG})" == "" ]]; then
+			sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
+			sudo echo -e "hwaddress ether $1" >> ${IFUPDOWN_CFG}
+		else
+			# 配置中出现该网卡的配置，那么我们将强制改为静态
+			# 插入iface语句并设置了静态
+			sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *iface.*/iface $(get_netcard_name) inet static/}" ${IFUPDOWN_CFG}
+			## 判断是否存在hwaddress关键字，不存在的话在在第二个auto的前一行插入address及其ip地址..和默认netmask
+			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *hwaddress*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\nhwaddress ether $1/g}" ${IFUPDOWN_CFG}
+			else
+				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *hwaddress.*/hwaddress ether $1/}" ${IFUPDOWN_CFG}
+			fi
+		fi
+	else
+		echo "Searching interface guid.."
+		temp_num_str=$(cat ${ORIG_IFUPDOWN_CFG} | grep reg_pos_of_mac | cut -d ';' -f2)
+		if [[ ${temp_num_str} == "" || ! -s ${ORIG_IFUPDOWN_CFG} ]]; then
+			temp_num_str=$(get_pos_of_mac_in_reg)
+		fi
+		#mac_address=${mac_address//:/} #去掉冒号.. 
+		reg add HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Class\\\{4D36E972-E325-11CE-BFC1-08002bE10318\}\\$temp_num_str //v  NetworkAddress //d ${1//:/} //f
+	fi
+	return 0
+}
+# }}}
+
+#{{{ 网络配置备份或者恢复 
 # 接受两个参数,$1固定为dump或者restore,$2备份信息保存的文件或者恢复的文件..
 function net_time_machine()
 {
@@ -388,7 +431,7 @@ function net_time_machine()
 		echo "Dumpping network config..."
 		if [[ $(get_os_type) == "Unix" ]]; then
 			sudo mkdir -p ${2%/*}
-			if [[ "$(cat ${IFUPDOWN_CFG} | grep "auto *$(get_netcard_name)" )" == "" ]]; then
+			if [[ "$(cat ${IFUPDOWN_CFG} | grep "^ *auto *$(get_netcard_name)" )" == "" ]]; then
 				# 在interfaces文件中没有当前网卡的配置，所以需要获取相关信息然后写入，然后在保存..
 				is_dhcp
 				if [[ $? -eq 0 ]]; then
@@ -398,7 +441,7 @@ function net_time_machine()
 					sudo echo -e "address $(get_ip_addr)\nnetmask $(get_netmask)\ngateway $(get_gw)\nhwaddress ether $(get_mac_address)" >> ${IFUPDOWN_CFG}
 				fi
 			fi
-			sudo cp ${IFUPDOWN_CFG} $2
+			sudo cp -a ${IFUPDOWN_CFG} $2
 		else
 			mkdir -p ${2%/*}
 			netsh -c interface dump > $2
@@ -407,13 +450,9 @@ function net_time_machine()
 			echo "# reg_pos_of_mac;$(get_pos_of_mac_in_reg)" >> $2
 		fi
 	elif [[ $1 == "restore" ]]; then
-		echo -e "\nRestore network config..."
+		echo -e "Restore network config..."
 			if [[ $(get_os_type) == "Unix" ]]; then
-				read -n1 -p  "Are you sure to overwrite ${IFUPDOWN_CFG}[y/n]" user_input
-				echo -e "\n"
-				if [[ "${user_input}" == "" || "${user_input}" == [yY] ]]; then
-					sudo cp $2 ${IFUPDOWN_CFG}
-				fi
+				sudo cp -a $2 ${IFUPDOWN_CFG}
 			else
 				netsh -f $2
 				set_mac_addr $(cat $2 | grep macaddress | cut -d ';' -f2)
@@ -424,8 +463,10 @@ function net_time_machine()
 		echo "$0 dump|restore filename"
 	fi
 }
+# }}}
 
-# 类似于编译程序时configure程序的作用：检查依赖
+#{{{ 检查依赖
+# 类似我们编译众多linux软件源代码时configure程序的作用
 # 接受一个字符串参数，每个命令之间用空格隔开...
 function configure()
 {
@@ -434,10 +475,10 @@ function configure()
 	do
 		which $i > ${TEMP_FILE} 2>&1
 		if [[ $? -ne 0 ]]; then
-			echo -e "Checking $i ..... no"
+			echo -e "Checking for $i ..... no"
 			package_lack="$i ${package_lack}"
 		else
-			echo -e "Checking $i ..... yes"
+			echo -e "Checking for $i ..... yes"
 		fi
 	done	
 	if [[ ${package_lack} != "" ]]; then
@@ -447,9 +488,11 @@ function configure()
 	fi
 	rm -f ${TEMP_FILE}
 }
-# }}}
+#}}}
 
-# {{{脚本进程
+#}}}
+
+# {{{脚本开始
 
 #  环境检查..
 if [[ "$(get_os_type)" == "Unix" ]]; then
@@ -487,6 +530,7 @@ while [[ 1 ]]; do
 		#打印找到的所有配置的名字
 		# 输出友好的提示信息让用户选择
 		echo  "This is network_quick_switch tool."
+		echo -e "-----------------------------------------"
 		echo  "0,restore default config."
 		while [[ "${CFG_NAME}" != "" ]]; do
 			echo  "${nump},${CFG_NAME}"
@@ -496,7 +540,7 @@ while [[ 1 ]]; do
 		echo  "q,quit the script."
 		echo  "a,add a config."
 		echo  "s,Setting current network config as default"
-		echo  "----------------------------"
+		echo -e "-----------------------------------------"
 
 		nump=${nump}-1
 		read -n1 -p  "Please input the character at the begin of each line:" user_input
@@ -527,7 +571,7 @@ while [[ 1 ]]; do
 			CFG_IP=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_IP_IDX})
 			CFG_MAC=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_MAC_IDX})
 			CFG_DNS=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_DNS_IDX})
-			set_mac_addr $CFG_MAC
+			set_mac_addr ${CFG_MAC}
 			set_ip_addr ${CFG_IP}
 			set_dns ${CFG_DNS}
 			#重启网卡..
@@ -548,7 +592,8 @@ done
 
 rm -f ${TEMP_FILE}
 # 结束语==!
-echo -e "\nThank you for using network_quick_switch"
+echo -e "-----------------------------------------"
+echo -e "Thank you for using network_quick_switch"
 echo -e "Contact me by email:tracyone@live.cn"
 
 # }}}
