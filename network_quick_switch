@@ -1,28 +1,35 @@
 #!/bin/sh
 # author:tracyone,tracyone@live.cn
 # description:
-	# ä¸ªå°è„šæœ¬çš„åŠŸèƒ½å¿«é€Ÿåˆ‡æ¢åˆ‡æ¢ç½‘ç»œé…ç½®ï¼ŒåŒ…æ‹¬macåœ°å€ã€IPåœ°å€å’ŒDNS
-	# 1,ç”¨æˆ·å¯ä»¥è¿…é€Ÿçš„åˆ‡æ¢åˆ°ä»»æ„é…ç½®å¥½çš„ipé…ç½®ä¸Š
-	# 2,ç”¨æˆ·å¯ä»¥è¿…é€Ÿæ¢å¤åˆ°æœ€åˆçš„ipé…ç½®ä¸Š
-	# 3,ç”¨æˆ·å¯ä»¥åœ¨é…ç½®ç•Œé¢ä¸Šæ·»åŠ /åˆ é™¤ä¸€ä¸ªæ–°çš„é…ç½®ï¼Œä¹Ÿå¯ä»¥ç›´æ¥ä¿®æ”¹é…ç½®æ–‡ä»¶
-	# 4,æ­¤è„šæœ¬å°†æ”¯æŒwindows xpã€windows 7ã€ubuntuåŠå…¶è¡ç”Ÿç‰ˆå’ŒdebianåŠå…¶è¡ç”Ÿç‰ˆ
-	# é…ç½®æ–‡ä»¶çš„æ ¼å¼:æ–°ä¸€è¡Œä»¥#å¼€å¤´çš„ä¸ºæ³¨é‡Šï¼Œæ‰€æœ‰æ³¨é‡Šä¼šè¢«å¿½ç•¥,æ‰€æœ‰ç©ºè¡Œä¼šè¢«å¿½ç•¥
-	# é…ç½®å:IPåœ°å€:MACåœ°å€:DNS
-	# ä½ å¯ä»¥é€šè¿‡è¿™æ¡å‘½ä»¤è·å¾—æœ€æ–°ç‰ˆæœ¬:git clone https://github.com/tracyone/shell_script.git
+	# ¸öĞ¡½Å±¾µÄ¹¦ÄÜ¿ìËÙÇĞ»»ÇĞ»»ÍøÂçÅäÖÃ£¬°üÀ¨macµØÖ·¡¢IPµØÖ·ºÍDNS
+	# 1,ÓÃ»§¿ÉÒÔÑ¸ËÙµÄÇĞ»»µ½ÈÎÒâÅäÖÃºÃµÄipÅäÖÃÉÏ
+	# 2,ÓÃ»§¿ÉÒÔÑ¸ËÙ»Ö¸´µ½×î³õµÄipÅäÖÃÉÏ
+	# 3,ÓÃ»§¿ÉÒÔÔÚÅäÖÃ½çÃæÉÏÌí¼Ó/É¾³ıÒ»¸öĞÂµÄÅäÖÃ£¬Ò²¿ÉÒÔÖ±½ÓĞŞ¸ÄÅäÖÃÎÄ¼ş
+	# 4,´Ë½Å±¾½«Ö§³Öwindows xp¡¢windows 7¡¢ubuntu¼°ÆäÑÜÉú°æºÍdebian¼°ÆäÑÜÉú°æ
+	# ÅäÖÃÎÄ¼şµÄ¸ñÊ½:ĞÂÒ»ĞĞÒÔ#¿ªÍ·µÄÎª×¢ÊÍ£¬ËùÓĞ×¢ÊÍ»á±»ºöÂÔ,ËùÓĞ¿ÕĞĞ»á±»ºöÂÔ
+	# ÅäÖÃÃû:IPµØÖ·:MACµØÖ·:DNS
+	# Äã¿ÉÒÔÍ¨¹ıÕâÌõÃüÁî»ñµÃ×îĞÂ°æ±¾:git clone https://github.com/tracyone/shell_script.git
 # history:
-	# 2014-01-17/22:37:25 windows xpæµ‹è¯•æˆåŠŸ
-	# 2014-01-18/18:01:55 ubuntu 10.04 lucid æµ‹è¯•æˆåŠŸ
+	# 2014-01-17/22:37:25 windows xp sp3²âÊÔ³É¹¦
+	# 2014-01-18/18:01:55 ubuntu 10.04 lucid ²âÊÔ³É¹¦
+	# 2014-01-20/01:35:54 windows7 sp1 x86 ²âÊÔ»ù±¾Í¨¹ı
+# help:
+	# ÒªÏë±¾½Å±¾ÔÚlinuxºÍwindowsÏÂ¶¼Ë³ÀûÖ´ĞĞµÄ»°£¬±ØĞë±£Ö¤Ê×ÏÈ±¾ÎÄ±¾µÄÎÄ¼ş±àÂë±ØĞëÊÇcp936
+	# Æä´Î±¾½Å±¾µÄÎÄ×Ö±àÂë±ØĞëÊÇunix
+	# ¸ü¶àhelp ...ÒÔºó²¹³ä
+# known bugs:
+	#
 
-# {{{ç¯å¢ƒå˜é‡æ¥å£
-ORIG_IFUPDOWN_CFG="/etc/network/interfaces.org" #æ­¤æ–‡ä»¶æ˜¯ifdownupå‘½ä»¤çš„é…ç½®æ–‡ä»¶çš„å¤‡ä»½æ–‡ä»¶ä¸ºäº†ç»Ÿä¸€windowsä¸‹åŒæ ·ä½¿ç”¨è¿™ä¸ªæ–‡ä»¶..
-IFUPDOWN_CFG="/etc/network/interfaces" #æ­¤æ–‡ä»¶æ˜¯ifdownupå‘½ä»¤çš„é…ç½®æ–‡ä»¶ä¸ºäº†ç»Ÿä¸€windowsä¸‹åŒæ ·ä½¿ç”¨è¿™ä¸ªæ–‡ä»¶..
-USER_NETOWRK_CFG="quick_sw.txt" #æœ¬è„šæœ¬ç½‘ç»œé…ç½®æ–‡ä»¶ 
-# ä¸‹é¢4ä¸ªç¯å¢ƒå˜é‡ä½œä¸ºç”¨æˆ·è¾“å…¥ä¿å­˜çš„åœ°æ–¹..
+# {{{»·¾³±äÁ¿½Ó¿Ú
+ORIG_IFUPDOWN_CFG="/etc/network/interfaces.org" #´ËÎÄ¼şÊÇifdownupÃüÁîµÄÅäÖÃÎÄ¼şµÄ±¸·İÎÄ¼şÎªÁËÍ³Ò»windowsÏÂÍ¬ÑùÊ¹ÓÃÕâ¸öÎÄ¼ş..
+IFUPDOWN_CFG="/etc/network/interfaces" #´ËÎÄ¼şÊÇifdownupÃüÁîµÄÅäÖÃÎÄ¼şÎªÁËÍ³Ò»windowsÏÂÍ¬ÑùÊ¹ÓÃÕâ¸öÎÄ¼ş..
+USER_NETOWRK_CFG="quick_sw.txt" #±¾½Å±¾ÍøÂçÅäÖÃÎÄ¼ş 
+# ÏÂÃæ4¸ö»·¾³±äÁ¿×÷ÎªÓÃ»§ÊäÈë±£´æµÄµØ·½..
 CFG_NAME=""
 CFG_IP=""
 CFG_MAC=""
 CFG_DNS=""
-#ä¸‹é¢4ä¸ªå˜é‡æ˜¯ä¸Šé¢4ä¸ªå˜é‡å¯¹åº”çš„é…ç½®è¡Œé‡Œé¢çš„ä½ç½®..
+#ÏÂÃæ4¸ö±äÁ¿ÊÇÉÏÃæ4¸ö±äÁ¿¶ÔÓ¦µÄÅäÖÃĞĞÀïÃæµÄÎ»ÖÃ..
 CFG_NAME_IDX=1
 CFG_IP_IDX=2
 CFG_MAC_IDX=3
@@ -30,18 +37,18 @@ CFG_DNS_IDX=4
 TEMP_FILE="./temp_file"
 # }}}
 
-# {{{å‡½æ•°æ¥å£
+# {{{º¯Êı½Ó¿Ú
 
-#{{{ è·å–å­—ç¬¦ä¸²é•¿åº¦..
-#æ¥å—ä¸€ä¸ªå‚æ•°,å°±æ˜¯å­—ç¬¦ä¸²..
+#{{{ »ñÈ¡×Ö·û´®³¤¶È..
+#½ÓÊÜÒ»¸ö²ÎÊı,¾ÍÊÇ×Ö·û´®..
 function get_str_len()
 {
 	echo ${#1}
 }
 #}}}
 
-#{{{ æ£€æµ‹æ“ä½œç³»ç»Ÿç±»å‹..
-#è¿”å›Unixæˆ–è€…Nt+ç‰ˆæœ¬ï¼Œä¾‹å¦‚Nt5.1
+#{{{ ¼ì²â²Ù×÷ÏµÍ³ÀàĞÍ..
+#·µ»ØUnix»òÕßNt+°æ±¾£¬ÀıÈçNt5.1
 function get_os_type()
 {
 	local os_type=$(uname)
@@ -49,8 +56,8 @@ function get_os_type()
 	if [[ "${os_type}" == "Linux" || "${os_type}" == "Darwin" ]]; then
 		echo "Unix"
 	else
-		nt_ver=$(reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion" //v CurrentVersion | awk '{print $3 "\t"}'  | sed -n '5p')
-		echo "Nt${nt_ver}"
+		nt_ver=$(reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion" //v CurrentVersion)
+		echo "Nt${nt_ver#*REG_SZ}" | sed -e 's/[\ \t]//g'
 	fi
 }
 #}}}
@@ -63,31 +70,33 @@ function clear_screen()
 }
 #}}}
 
-#{{{  è¿”å›å½“å‰ç½‘ç»œé“¾æ¥çš„macåœ°å€çš„å­—ç¬¦ä¸²...
-# ç»“æœçš„å½¢å¼æ˜¯:08:00:00:00:00:01
+#{{{  ·µ»Øµ±Ç°ÍøÂçÁ´½ÓµÄmacµØÖ·µÄ×Ö·û´®...
+# ½á¹ûµÄĞÎÊ½ÊÇ:08:00:00:00:00:01
 function get_mac_address()
 {
+	local connection_name=$(get_netcard_name)
 	local mac_address=""
 	if [[ $(get_os_type) == "Unix" ]]; then
-		mac_address=$(ifconfig | grep $(get_netcard_name) | tr -s ' ' | cut -d ' ' -f5)
-		#mac_address=${mac_address//:/} #å»æ‰å†’å·.. 
+		mac_address=$(ifconfig | grep ${connection_name} | tr -s ' ' | cut -d ' ' -f5)
+		#mac_address=${mac_address//:/} #È¥µôÃ°ºÅ.. 
 	else
 		mac_address=$(getmac | sed -n '4p' | cut -d ' ' -f1) 
-		mac_address=${mac_address//-/:} #åŠ å…¥å†’å·
+		mac_address=${mac_address//-/:} #¼ÓÈëÃ°ºÅ
 	fi
 	echo "${mac_address}"
 }
 #}}}
 
-#{{{ è·å–å½“å‰ç½‘ç»œé“¾æ¥çš„ipåœ°å€
-#å¦‚æœä¸ºdhcpåˆ™è¿”å›ç©º...
+#{{{ »ñÈ¡µ±Ç°ÍøÂçÁ´½ÓµÄipµØÖ·
+#Èç¹ûÎªdhcpÔò·µ»Ø¿Õ...
 function get_ip_addr()
 {
+	local connection_name=$(get_netcard_name)
 	is_dhcp
 	if [[ $? -ne 0 ]]; then
 		local ip_address=""
 		if [[ $(get_os_type) == "Unix" ]]; then
-			ip_address=$(ifconfig $(get_netcard_name) | grep 'inet ' | tr -s ' ' | cut -d ' ' -f3)
+			ip_address=$(ifconfig ${connection_name} | grep 'inet ' | tr -s ' ' | cut -d ' ' -f3)
 			ip_address=${ip_address#*:}
 		else
 			ip_address=$(netsh interface ip show address | grep -v '^$' | sed -n '3p' | awk '{print $3}' )
@@ -99,15 +108,16 @@ function get_ip_addr()
 }
 #}}}
 
-#{{{ è·å–å½“å‰ç½‘ç»œé“¾æ¥çš„æ©ç 
-#å¦‚æœä¸ºdhcpåˆ™è¿”å›ç©º...
+#{{{ »ñÈ¡µ±Ç°ÍøÂçÁ´½ÓµÄÑÚÂë
+#Èç¹ûÎªdhcpÔò·µ»Ø¿Õ...
 function get_netmask()
 {
+	local connection_name=$(get_netcard_name)
 	is_dhcp
 	if [[ $? -ne 0 ]]; then
 		local ip_address=""
 		if [[ $(get_os_type) == "Unix" ]]; then
-			ip_address=$(ifconfig $(get_netcard_name) | grep 'inet ' | tr -s ' ' | cut -d ' ' -f5)
+			ip_address=$(ifconfig ${connection_name} | grep 'inet ' | tr -s ' ' | cut -d ' ' -f5)
 			ip_address=${ip_address#*:}
 		else
 			ip_address=$(netsh interface ip show address | grep -v '^$' | sed -n '4p' | awk '{print $2}' )
@@ -119,15 +129,15 @@ function get_netmask()
 }
 #}}}
 
-#{{{ è·å–å½“å‰ç½‘ç»œé“¾æ¥çš„ç½‘å…³
-#å¦‚æœä¸ºdhcpåˆ™è¿”å›ç©º...
+#{{{ »ñÈ¡µ±Ç°ÍøÂçÁ´½ÓµÄÍø¹Ø
+#Èç¹ûÎªdhcpÔò·µ»Ø¿Õ...
 function get_gw()
 {
 	is_dhcp
 	if [[ $? -ne 0 ]]; then
 		local ip_address=""
 		if [[ $(get_os_type) == "Unix" ]]; then
-			ip_address=$(route -n | grep UG | awk '{print $2 "\t"}') #Uè¡¨ç¤ºå¯åŠ¨ï¼ŒGè¡¨ç¤ºè¿™æ˜¯gateway 
+			ip_address=$(route -n | grep UG | awk '{print $2 "\t"}') #U±íÊ¾Æô¶¯£¬G±íÊ¾ÕâÊÇgateway 
 			ip_address=${ip_address#*:}
 		else
 			ip_address=$(netsh interface ip show address | grep -v '^$' | sed -n '5p' | awk '{print $2}' )
@@ -139,17 +149,17 @@ function get_gw()
 }
 #}}}
 
-#{{{  ä¸‹é¢å‡½æ•°ç”¨äºæ·»åŠ ç½‘ç»œé…ç½®æ–‡ä»¶åˆ°${CUR_NETWORK_CFG}ä¸­..
+#{{{  ÏÂÃæº¯ÊıÓÃÓÚÌí¼ÓÍøÂçÅäÖÃÎÄ¼şµ½${CUR_NETWORK_CFG}ÖĞ..
 function add_cfg()
 {
 	clear_screen
 	echo -e "== Add network cfg guide =="
 	if [[ ! -s ${USER_NETOWRK_CFG} ]]; then
-		echo "# é…ç½®æ ¼å¼ä¸º:" > ${USER_NETOWRK_CFG}
-		echo "# é…ç½®å;IPåœ°å€;MACåœ°å€;DNS" >> ${USER_NETOWRK_CFG}
-		echo "# "#"å¼€å¤´çš„ä¼šè¢«å¿½ç•¥ï¼Œå¯ä½œä¸ºæ³¨é‡Šï¼Œä½†æ˜¯åªèƒ½æ”¾åœ¨å•ç‹¬ä¸€è¡Œ" >> ${USER_NETOWRK_CFG}
-		echo "# åé¢çš„IPåœ°å€å’ŒMACåœ°å€å’ŒDNSéƒ½å¯ä»¥ä¸ºç©ºï¼Œå¦‚æœä¸ºç©ºé‚£ä¹ˆå¯¹åº”é¡¹å°†ä¿æŒåŸæ¥è®¾ç½®" >> ${USER_NETOWRK_CFG}
-		echo "# é…ç½®åä¸èƒ½ç©º" >> ${USER_NETOWRK_CFG}
+		echo "# ÅäÖÃ¸ñÊ½Îª:" > ${USER_NETOWRK_CFG}
+		echo "# ÅäÖÃÃû;IPµØÖ·;MACµØÖ·;DNS" >> ${USER_NETOWRK_CFG}
+		echo "# "#"¿ªÍ·µÄ»á±»ºöÂÔ£¬¿É×÷Îª×¢ÊÍ£¬µ«ÊÇÖ»ÄÜ·ÅÔÚµ¥¶ÀÒ»ĞĞ" >> ${USER_NETOWRK_CFG}
+		echo "# ºóÃæµÄIPµØÖ·ºÍMACµØÖ·ºÍDNS¶¼¿ÉÒÔÎª¿Õ£¬Èç¹ûÎª¿ÕÄÇÃ´¶ÔÓ¦Ïî½«±£³ÖÔ­À´ÉèÖÃ" >> ${USER_NETOWRK_CFG}
+		echo "# ÅäÖÃÃû²»ÄÜ¿Õ" >> ${USER_NETOWRK_CFG}
 	fi
 
 	while [[ 1 ]]; do
@@ -169,8 +179,8 @@ function add_cfg()
 }
 #}}}
 
-#{{{  è·å–å½“å‰å·¥ä½œç½‘å¡åœ¨æ³¨å†Œè¡¨çš„ä½ç½®.windows only
-# è¿”å›å½“å‰ç½‘å¡åœ¨æ³¨å†Œè¡¨çš„ç›¸å¯¹ä½ç½®ï¼Œå…·ä½“æ¥è¯´å°±æ˜¯HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}ä¸‹ä¸€çº§çš„æ•°å­—
+#{{{  »ñÈ¡µ±Ç°¹¤×÷Íø¿¨ÔÚ×¢²á±íµÄÎ»ÖÃ.windows only
+# ·µ»Øµ±Ç°Íø¿¨ÔÚ×¢²á±íµÄÏà¶ÔÎ»ÖÃ£¬¾ßÌåÀ´Ëµ¾ÍÊÇHKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}ÏÂÒ»¼¶µÄÊı×Ö
 function get_pos_of_mac_in_reg()
 {
 	local interface_guid=$(getmac | sed -n '4p' | cut -d '_' -f2)
@@ -194,9 +204,9 @@ function get_pos_of_mac_in_reg()
 }
 #}}}
 
-#{{{  æ­¤å‡½æ•°çš„ä½œç”¨æ˜¯è¯»å–å›ºå®šæ ¼å¼çš„æ–‡æœ¬é‡Œé¢çš„ä¸€ä¸ªfield
-# æ¥å—3ä¸ªå‚æ•°ï¼Œ$1ä¸ºæ–‡æœ¬çš„æ‰€åœ¨è·¯å¾„å’Œåå­—,$2æ˜¯è¯»å–ç¬¬å‡ è¡Œ,$3æ˜¯è¯»å–è¿™ä¸€è¡Œçš„ç¬¬å‡ ä¸ªåŸŸ
-# è¿”å›ä¸€ä¸ªå‚æ•°ç”¨äºè¿”å›è¯¥å­—æ®µçš„å†…å®¹
+#{{{  ´Ëº¯ÊıµÄ×÷ÓÃÊÇ¶ÁÈ¡¹Ì¶¨¸ñÊ½µÄÎÄ±¾ÀïÃæµÄÒ»¸öfield
+# ½ÓÊÜ3¸ö²ÎÊı£¬$1ÎªÎÄ±¾µÄËùÔÚÂ·¾¶ºÍÃû×Ö,$2ÊÇ¶ÁÈ¡µÚ¼¸ĞĞ,$3ÊÇ¶ÁÈ¡ÕâÒ»ĞĞµÄµÚ¼¸¸öÓò
+# ·µ»ØÒ»¸ö²ÎÊıÓÃÓÚ·µ»Ø¸Ã×Ö¶ÎµÄÄÚÈİ
 function read_a_field_of_conf()
 {
 	local conf_field=""
@@ -205,13 +215,13 @@ function read_a_field_of_conf()
 }
 #}}}
 
-#{{{ ä¸‹é¢çš„å‡½æ•°è¯»å–é…ç½®æ–‡ä»¶ä¸­çš„æŒ‡å®šè¡Œçš„å¯¹è±¡åå­—
-# æ¥å—2ä¸ªå‚æ•°ï¼Œ$1ä¸ºæ–‡æœ¬çš„æ‰€åœ¨è·¯å¾„å’Œåå­—,$2æ˜¯è¯»å–ç¬¬å‡ è¡Œ
-# è¿”å›ä¸€ä¸ªå‚æ•°ç”¨äºè¿”å›è¯¥è¡Œçš„åå­—...
+#{{{ ÏÂÃæµÄº¯Êı¶ÁÈ¡ÅäÖÃÎÄ¼şÖĞµÄÖ¸¶¨ĞĞµÄ¶ÔÏóÃû×Ö
+# ½ÓÊÜ2¸ö²ÎÊı£¬$1ÎªÎÄ±¾µÄËùÔÚÂ·¾¶ºÍÃû×Ö,$2ÊÇ¶ÁÈ¡µÚ¼¸ĞĞ
+# ·µ»ØÒ»¸ö²ÎÊıÓÃÓÚ·µ»Ø¸ÃĞĞµÄÃû×Ö...
 function read_a_name_of_conf()
 {
 	local cfg_name=""
-	cfg_name=$(read_a_field_of_conf $1 $2 1) #ç¬¬ä¸€ä¸ªåŸŸå›ºå®šä¸ºè¯¥è¡Œé…ç½®çš„åå­—ï¼Œè¿™æ˜¯äººä¸ºè§„å®šçš„. 
+	cfg_name=$(read_a_field_of_conf $1 $2 1) #µÚÒ»¸öÓò¹Ì¶¨Îª¸ÃĞĞÅäÖÃµÄÃû×Ö£¬ÕâÊÇÈËÎª¹æ¶¨µÄ. 
 	echo "${cfg_name}"
 }
 #}}}
@@ -220,23 +230,31 @@ function read_a_name_of_conf()
 function get_netcard_name()
 {
 	if [[ $(get_os_type) == "Unix" ]]; then
-		local net_card_str=$(ifconfig -a | grep '^eth.*' | awk '{print $1 " "}')
+		local net_card_str=$(ip route | grep default |cut -d' ' -f 5)
 	else
 		local net_card_str=$(netsh interface ip show address | sed -n '2p' | cut -d '"' -f 2)
 	fi
+
+	if [[ "${net_card_str}" == "" ]]; then
+		read -p  "There are no connection right now,please enter the name of connection" user_input
+		net_card_str=${user_input}
+	fi
+
 	echo "${net_card_str}"
 }
 #}}}
 
-#{{{  åˆ¤æ–­å½“å‰æ˜¯å¦ä¸ºdhcp
-# å¦‚æœæ˜¯è¿”å›0,å¦åˆ™é0..
+#{{{  ÅĞ¶Ïµ±Ç°ÊÇ·ñÎªdhcp
+# Èç¹ûÊÇ·µ»Ø0,·ñÔò·Ç0..
 function is_dhcp()
 {
+	local connection_name=$(get_netcard_name)
 	local temp=""
 	if [[ $(get_os_type) == "Unix" ]]; then
-		temp=$(ps ax | grep dhclient | grep -v grep | grep $(get_netcard_name))	
+		temp=$(ps ax | grep dhclient | grep -v grep | grep ${connection_name})	
 	else
-		temp=$(netsh -c interface dump | grep 'dhcp' | grep $(get_netcard_name))
+		#temp=$(netsh -c interface dump | grep 'dhcp' | grep $(get_netcard_name))
+		temp=$(netsh int ip show config "${connection_name}" | sed -n '3p' | grep 'ÊÇ' )
 	fi
 	if [[ "${temp}" == "" ]]; then
 		return 1
@@ -246,7 +264,7 @@ function is_dhcp()
 }
 #}}}
 
-#{{{ è·å¾—ç½‘å¡çš„è®¾å¤‡id,windows only
+#{{{ »ñµÃÍø¿¨µÄÉè±¸id,windows only
 function get_netcard_id()
 {
 	local temp_num_str=""
@@ -257,18 +275,19 @@ function get_netcard_id()
 }
 #}}}
 
-#{{{ é‡å¯ç½‘å¡..
+#{{{ ÖØÆôÍø¿¨..
 function reset_netcard()
 {
+	local connection_name=$(get_netcard_name)
 	local os_type=$(get_os_type)
 	local netcatd_id=""
-	echo "Restarting network card $(get_netcard_name)..."
+	echo "Restarting network card ${connection_name}..."
 	if [[ "${os_type}" == "Unix" ]]; then
-		sudo ifdown --force $(get_netcard_name) 
+		sudo ifdown --force ${connection_name}
 		sleep 2
-		sudo ifup  --force $(get_netcard_name)
+		sudo ifup  --force ${connection_name}
 		sudo resolvconf -u
-	else
+	elif [[ "${os_type}" == "Nt5.1" ]]; then
 		netcatd_id=$(cat ${ORIG_IFUPDOWN_CFG} | grep netcatd_id | cut -d ';' -f2)
 		if [[ ${netcatd_id} == "" || ! -s ${ORIG_IFUPDOWN_CFG} ]]; then
 			netcatd_id=$(get_netcard_id)
@@ -276,138 +295,144 @@ function reset_netcard()
 		devcon disable *${netcatd_id}*
 		sleep 2
 		devcon enable *${netcatd_id}*
-		# ä¸‹é¢çš„æ–¹æ³•åœ¨xpä¸‹ä¸èµ·ä½œç”¨
-		#netsh interface set interface name="$(get_netcard_name)" admin=disabled
-		#sleep 2
-		#netsh interface set interface name="$(get_netcard_name)" admin=enabled
+	else
+		local net_name=${connection_name}
+		netsh interface set interface "${net_name}" DISABLED
+		sleep 2
+		netsh interface set interface "${net_name}" ENABLED 
 	fi
-	echo "Restart network card $(get_netcard_name) successfully!"
+	echo "Restart network card ${connection_name} successfully!"
 }
 # }}}
 
-#{{{ è®¾ç½®ipåœ°å€ä»¥åŠé»˜è®¤çš„netmaskå’Œè‡ªåŠ¨é€‚åº”çš„gateway
-# æ¥æ”¶ä¸€ä¸ªå‚æ•°,$1:ipåœ°å€
+#{{{ ÉèÖÃipµØÖ·ÒÔ¼°Ä¬ÈÏµÄnetmaskºÍ×Ô¶¯ÊÊÓ¦µÄgateway
+# ½ÓÊÕÒ»¸ö²ÎÊı,$1:ipµØÖ·
 function set_ip_addr()
 {
+	local connection_name=$(get_netcard_name)
 	echo "Setting ip address $1 ..."
 	if [[ $(get_os_type) == "Unix" ]]; then
-		# é…ç½®ä¸­ä¸å­˜åœ¨è¯¥ç½‘å¡çš„é…ç½®..
-		if [[ "$(grep "^ *auto .*$(get_netcard_name)" ${IFUPDOWN_CFG})" == "" ]]; then
-			sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
+		# ÅäÖÃÖĞ²»´æÔÚ¸ÃÍø¿¨µÄÅäÖÃ..
+		if [[ "$(grep "^ *auto .*${connection_name}" ${IFUPDOWN_CFG})" == "" ]]; then
+			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
 			sudo echo -e "address $1" >> ${IFUPDOWN_CFG}
 			sudo echo -e "netmask 255.255.255.0" >> ${IFUPDOWN_CFG}
 			sudo echo -e  "gateway ${1%.*}.1" >> ${IFUPDOWN_CFG}
 		else
-			# é…ç½®ä¸­å‡ºç°è¯¥ç½‘å¡çš„é…ç½®ï¼Œé‚£ä¹ˆæˆ‘ä»¬å°†å¼ºåˆ¶æ”¹ä¸ºé™æ€ipåœ°å€..
-			# æ’å…¥ifaceè¯­å¥å¹¶è®¾ç½®äº†é™æ€
-			sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *iface.*/iface $(get_netcard_name) inet static/}" ${IFUPDOWN_CFG}
-			# åˆ¤æ–­æ˜¯å¦å­˜åœ¨addresså…³é”®å­—ï¼Œä¸å­˜åœ¨çš„è¯åœ¨åœ¨ç¬¬äºŒä¸ªautoçš„å‰ä¸€è¡Œæ’å…¥addressåŠå…¶ipåœ°å€..å’Œé»˜è®¤netmask
-			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *address.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\naddress $1/g}" ${IFUPDOWN_CFG}
+			# ÅäÖÃÖĞ³öÏÖ¸ÃÍø¿¨µÄÅäÖÃ£¬ÄÇÃ´ÎÒÃÇ½«Ç¿ÖÆ¸ÄÎª¾²Ì¬ipµØÖ·..
+			# ²åÈëifaceÓï¾ä²¢ÉèÖÃÁË¾²Ì¬
+			sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *iface.*/iface ${connection_name} inet static/}" ${IFUPDOWN_CFG}
+			# ÅĞ¶ÏÊÇ·ñ´æÔÚaddress¹Ø¼ü×Ö£¬²»´æÔÚµÄ»°ÔÚÔÚµÚ¶ş¸öautoµÄÇ°Ò»ĞĞ²åÈëaddress¼°ÆäipµØÖ·..ºÍÄ¬ÈÏnetmask
+			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *address.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\naddress $1/g}" ${IFUPDOWN_CFG}
 			else
-				# å¦‚æœå·²ç»å­˜åœ¨äº†é‚£ä¹ˆåŒ¹é…addressè¯­å¥å¹¶æ•´è¡Œæ›¿æ¢...
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *address.*/address $1/}" ${IFUPDOWN_CFG}
+				# Èç¹ûÒÑ¾­´æÔÚÁËÄÇÃ´Æ¥ÅäaddressÓï¾ä²¢ÕûĞĞÌæ»»...
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *address.*/address $1/}" ${IFUPDOWN_CFG}
 			fi
 
 			# netmask
-			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *netmask.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\nnetmask 255.255.255.0/g}" ${IFUPDOWN_CFG}
+			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *netmask.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\nnetmask 255.255.255.0/g}" ${IFUPDOWN_CFG}
 			else
-				# å¦‚æœå·²ç»å­˜åœ¨äº†é‚£ä¹ˆåŒ¹é…addressè¯­å¥å¹¶æ•´è¡Œæ›¿æ¢...
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *netmask.*/netmask 255.255.255.0/}" ${IFUPDOWN_CFG}
+				# Èç¹ûÒÑ¾­´æÔÚÁËÄÇÃ´Æ¥ÅäaddressÓï¾ä²¢ÕûĞĞÌæ»»...
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *netmask.*/netmask 255.255.255.0/}" ${IFUPDOWN_CFG}
 			fi
 
 			# gateway
-			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *gateway.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway ${1%.*}.1/g}" ${IFUPDOWN_CFG}
+			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *gateway.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway ${1%.*}.1/g}" ${IFUPDOWN_CFG}
 			else
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *gateway.*/gateway ${1%.*}.1/}" ${IFUPDOWN_CFG}
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *gateway.*/gateway ${1%.*}.1/}" ${IFUPDOWN_CFG}
 			fi
 		fi
 	else
-		netsh interface ip set address name="$(get_netcard_name)" static $1 255.255.255.0
+		netsh interface ip set address name="${connection_name}" static $1 255.255.255.0 ${1%.*}.1 gw=1
 	fi
 }
 # }}}
 
-#{{{ è®¾ç½®dns...
-# æ¥å—ä¸€ä¸ªå‚æ•°$1,è¡¨ç¤ºè¦è®¾ç½®çš„dnså­—ç¬¦ä¸²ï¼Œå¤šä¸ªdnsä¹‹é—´ç”¨ç©ºæ ¼éš”å¼€
+#{{{ ÉèÖÃdns...
+# ½ÓÊÜÒ»¸ö²ÎÊı$1,±íÊ¾ÒªÉèÖÃµÄdns×Ö·û´®£¬¶à¸ödnsÖ®¼äÓÃ¿Õ¸ñ¸ô¿ª
 function set_dns()
 {
+	local connection_name=$(get_netcard_name)
 	echo "Setting dns $1 ..."
 	if [[ "$(get_os_type)" == "Unix" ]]; then
-		# å…ˆåˆ¤æ–­æ˜¯å¦æ·»åŠ äº†é‡å¤çš„..
+		# ÏÈÅĞ¶ÏÊÇ·ñÌí¼ÓÁËÖØ¸´µÄ..
 		if [[ "$(cat /etc/resolvconf/resolv.conf.d/base | grep $1 )" == "" ]]; then
-			# ä¸‹é¢è¿™ä¸ªæ–‡ä»¶åªæœ‰åœ¨ä½ çš„ç³»ç»Ÿå®‰è£…äº†resolvconfä¹‹åæ‰ä¼šå‡ºç°..
+			# ÏÂÃæÕâ¸öÎÄ¼şÖ»ÓĞÔÚÄãµÄÏµÍ³°²×°ÁËresolvconfÖ®ºó²Å»á³öÏÖ..
 			sudo echo "nameserver "$1 >> /etc/resolvconf/resolv.conf.d/base
 		fi
 	else
-		netsh interface ip set dns name="$(get_netcard_name)" source=static addr=$1 register=PRIMARY
+		netsh interface ip set dns name="${connection_name}" source=static addr=$1 register=PRIMARY 2> ${TEMP_FILE}
+		rm ${TEMP_FILE}
 	fi
 }
 #}}}
 
-#{{{ è®¾ç½®ç½‘å…³..
-# æ¥æ”¶ä¸€ä¸ªå‚æ•°,$1:ç½‘å…³åœ°å€..
+#{{{ ÉèÖÃÍø¹Ø..
+# ½ÓÊÕÒ»¸ö²ÎÊı,$1:Íø¹ØµØÖ·..
 function set_gw()
 {
+	local connection_name=$(get_netcard_name)
 	echo "Setting gateway address $1 ..."
 	if [[ $(get_os_type) == "Unix" ]]; then
-		if [[ "$(grep "^ *auto .*$(get_netcard_name)" ${IFUPDOWN_CFG})" == "" ]]; then
-			sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
+		if [[ "$(grep "^ *auto .*${connection_name}" ${IFUPDOWN_CFG})" == "" ]]; then
+			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
 			sudo echo -e "gateway $1" >> ${IFUPDOWN_CFG}
 		else
-			# é…ç½®ä¸­å‡ºç°è¯¥ç½‘å¡çš„é…ç½®ï¼Œé‚£ä¹ˆæˆ‘ä»¬å°†å¼ºåˆ¶æ”¹ä¸ºé™æ€ipåœ°å€..
-			# æ’å…¥ifaceè¯­å¥å¹¶è®¾ç½®äº†é™æ€
-			sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *iface.*/iface $(get_netcard_name) inet static/}" ${IFUPDOWN_CFG}
-			# åˆ¤æ–­æ˜¯å¦å­˜åœ¨addresså…³é”®å­—ï¼Œä¸å­˜åœ¨çš„è¯åœ¨åœ¨ç¬¬äºŒä¸ªautoçš„å‰ä¸€è¡Œæ’å…¥addressåŠå…¶ipåœ°å€..å’Œé»˜è®¤netmask
-			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *gateway.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway $1/g}" ${IFUPDOWN_CFG}
+			# ÅäÖÃÖĞ³öÏÖ¸ÃÍø¿¨µÄÅäÖÃ£¬ÄÇÃ´ÎÒÃÇ½«Ç¿ÖÆ¸ÄÎª¾²Ì¬ipµØÖ·..
+			# ²åÈëifaceÓï¾ä²¢ÉèÖÃÁË¾²Ì¬
+			sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *iface.*/iface ${connection_name} inet static/}" ${IFUPDOWN_CFG}
+			# ÅĞ¶ÏÊÇ·ñ´æÔÚaddress¹Ø¼ü×Ö£¬²»´æÔÚµÄ»°ÔÚÔÚµÚ¶ş¸öautoµÄÇ°Ò»ĞĞ²åÈëaddress¼°ÆäipµØÖ·..ºÍÄ¬ÈÏnetmask
+			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *gateway.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway $1/g}" ${IFUPDOWN_CFG}
 			else
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *gateway.*/gateway $1/}" ${IFUPDOWN_CFG}
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *gateway.*/gateway $1/}" ${IFUPDOWN_CFG}
 			fi
 		fi
 	else
-		netsh interface ip set address "$(get_netcard_name)" gateway=$1 gw=1
+		netsh interface ip set address "${connection_name}" gateway=$1 gw=1
 	fi
 }
 # }}}
 
-#{{{ ä½¿èƒ½ifupdown Unix only
-# ç”±ifupdownå‘½ä»¤åŠå…¶é…ç½®æ–‡ä»¶æ¥ç®¡ç½‘ç»œç®¡ç†(å–ä»£networkmanger)
+#{{{ Ê¹ÄÜifupdown Unix only
+# ÓÉifupdownÃüÁî¼°ÆäÅäÖÃÎÄ¼ş½Ó¹ÜÍøÂç¹ÜÀí(È¡´únetworkmanger)
 function enable_ifupdown()
 {
 	if [[ "$(cat /etc/NetworkManager/*.conf | grep "managed" | cut -d '=' -f2)" == "false" ]]; then
 		echo Enable ifupdown successfully
 	else
-		# ä¹‹æ‰€ä»¥ç”¨é€šé…ç¬¦åŒ¹é…Networkmanagerä¸‹çš„confæ–‡ä»¶ï¼Œæ˜¯å› ä¸ºä¸åŒç‰ˆæœ¬çš„Networkmanagerçš„é…ç½®æ–‡ä»¶åä¸ä¸€æ ·
+		# Ö®ËùÒÔÓÃÍ¨Åä·ûÆ¥ÅäNetworkmanagerÏÂµÄconfÎÄ¼ş£¬ÊÇÒòÎª²»Í¬°æ±¾µÄNetworkmanagerµÄÅäÖÃÎÄ¼şÃû²»Ò»Ñù
 		sudo sed -ie 's/managed.*/managed=false/' /etc/NetworkManager/*.conf
 		echo Enable ifupdown successfully
 	fi
 }
 # }}}
 
-#{{{ é€šè¿‡ä¿®æ”¹æ³¨å†Œè¡¨æ¥ä¿®æ”¹æˆ‘ä»¬çš„ç½‘å¡macåœ°å€....å…·ä½“æ¥è¯´å°±æ˜¯:
-# HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}ä¸‹å¯¹åº”çš„æ–‡ä»¶å¤¹
-# å…¶ä¸­é”®:Networkaddressè¡¨ç¤ºçš„ç½‘å¡åœ°å€ï¼Œå…¶ä¸­Netcfginstanceid:è¡¨ç¤ºæ¯ä¸ªç½‘å¡å”¯ä¸€çš„GUID
-# è¿™ä¸ªå‡½æ•°æ¥å—ä¸€ä¸ªå‚æ•°ä»£è¡¨macåœ°å€ä»¥16è¿›åˆ¶çš„å½¢å¼æ¥è¡¨ç¤ºï¼Œä¾‹å¦‚345612780017
-# æˆåŠŸè¿”å›0ï¼Œå¦åˆ™é0,1ä»£è¡¨ä¼ å…¥å­—ç¬¦é•¿åº¦ä¸ç¬¦åˆï¼Œ2ä»£è¡¨æœ‰éæ³•å­—ç¬¦ï¼Œ3ä»£è¡¨æ‰¾ä¸åˆ°ç½‘å¡..
+#{{{ Í¨¹ıĞŞ¸Ä×¢²á±íÀ´ĞŞ¸ÄÎÒÃÇµÄÍø¿¨macµØÖ·....¾ßÌåÀ´Ëµ¾ÍÊÇ:
+# HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}ÏÂ¶ÔÓ¦µÄÎÄ¼ş¼Ğ
+# ÆäÖĞ¼ü:Networkaddress±íÊ¾µÄÍø¿¨µØÖ·£¬ÆäÖĞNetcfginstanceid:±íÊ¾Ã¿¸öÍø¿¨Î¨Ò»µÄGUID
+# Õâ¸öº¯Êı½ÓÊÜÒ»¸ö²ÎÊı´ú±ímacµØÖ·ÒÔ16½øÖÆµÄĞÎÊ½À´±íÊ¾£¬ÀıÈç345612780017
+# ³É¹¦·µ»Ø0£¬·ñÔò·Ç0,1´ú±í´«Èë×Ö·û³¤¶È²»·ûºÏ£¬2´ú±íÓĞ·Ç·¨×Ö·û£¬3´ú±íÕÒ²»µ½Íø¿¨..
 function set_mac_addr()
 {
+	local connection_name=$(get_netcard_name)
 	echo "Setting mac address $1 ..."
 	if [[ $(get_os_type) == "Unix" ]]; then
-		if [[ "$(grep "^ *auto .*$(get_netcard_name)" ${IFUPDOWN_CFG})" == "" ]]; then
-			sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
+		if [[ "$(grep "^ *auto .*${connection_name}" ${IFUPDOWN_CFG})" == "" ]]; then
+			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
 			sudo echo -e "hwaddress ether $1" >> ${IFUPDOWN_CFG}
 		else
-			# é…ç½®ä¸­å‡ºç°è¯¥ç½‘å¡çš„é…ç½®ï¼Œé‚£ä¹ˆæˆ‘ä»¬å°†å¼ºåˆ¶æ”¹ä¸ºé™æ€
-			# æ’å…¥ifaceè¯­å¥å¹¶è®¾ç½®äº†é™æ€
-			sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *iface.*/iface $(get_netcard_name) inet static/}" ${IFUPDOWN_CFG}
-			## åˆ¤æ–­æ˜¯å¦å­˜åœ¨hwaddresså…³é”®å­—ï¼Œä¸å­˜åœ¨çš„è¯åœ¨åœ¨ç¬¬äºŒä¸ªautoçš„å‰ä¸€è¡Œæ’å…¥addressåŠå…¶ipåœ°å€..å’Œé»˜è®¤netmask
-			if [[ "$(sed -n "/^ *auto .*$(get_netcard_name)/,/^ *auto/{/^ *hwaddress*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/\(^ *iface.*\)/\1\nhwaddress ether $1/g}" ${IFUPDOWN_CFG}
+			# ÅäÖÃÖĞ³öÏÖ¸ÃÍø¿¨µÄÅäÖÃ£¬ÄÇÃ´ÎÒÃÇ½«Ç¿ÖÆ¸ÄÎª¾²Ì¬
+			# ²åÈëifaceÓï¾ä²¢ÉèÖÃÁË¾²Ì¬
+			sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *iface.*/iface ${connection_name} inet static/}" ${IFUPDOWN_CFG}
+			## ÅĞ¶ÏÊÇ·ñ´æÔÚhwaddress¹Ø¼ü×Ö£¬²»´æÔÚµÄ»°ÔÚÔÚµÚ¶ş¸öautoµÄÇ°Ò»ĞĞ²åÈëaddress¼°ÆäipµØÖ·..ºÍÄ¬ÈÏnetmask
+			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *hwaddress*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\nhwaddress ether $1/g}" ${IFUPDOWN_CFG}
 			else
-				sudo sed -ie "/^ *auto .*$(get_netcard_name)/,/^ *auto/{s/^ *hwaddress.*/hwaddress ether $1/}" ${IFUPDOWN_CFG}
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *hwaddress.*/hwaddress ether $1/}" ${IFUPDOWN_CFG}
 			fi
 		fi
 	else
@@ -416,28 +441,29 @@ function set_mac_addr()
 		if [[ ${temp_num_str} == "" || ! -s ${ORIG_IFUPDOWN_CFG} ]]; then
 			temp_num_str=$(get_pos_of_mac_in_reg)
 		fi
-		#mac_address=${mac_address//:/} #å»æ‰å†’å·.. 
+		#mac_address=${mac_address//:/} #È¥µôÃ°ºÅ.. 
 		reg add HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Class\\\{4D36E972-E325-11CE-BFC1-08002bE10318\}\\$temp_num_str //v  NetworkAddress //d ${1//:/} //f
 	fi
 	return 0
 }
 # }}}
 
-#{{{ ç½‘ç»œé…ç½®å¤‡ä»½æˆ–è€…æ¢å¤ 
-# æ¥å—ä¸¤ä¸ªå‚æ•°,$1å›ºå®šä¸ºdumpæˆ–è€…restore,$2å¤‡ä»½ä¿¡æ¯ä¿å­˜çš„æ–‡ä»¶æˆ–è€…æ¢å¤çš„æ–‡ä»¶..
+#{{{ ÍøÂçÅäÖÃ±¸·İ»òÕß»Ö¸´ 
+# ½ÓÊÜÁ½¸ö²ÎÊı,$1¹Ì¶¨Îªdump»òÕßrestore,$2±¸·İĞÅÏ¢±£´æµÄÎÄ¼ş»òÕß»Ö¸´µÄÎÄ¼ş..
 function net_time_machine()
 {
+	local connection_name=$(get_netcard_name)
 	if [[ $1 == "dump" ]]; then
 		echo "Dumpping network config..."
 		if [[ $(get_os_type) == "Unix" ]]; then
 			sudo mkdir -p ${2%/*}
-			if [[ "$(cat ${IFUPDOWN_CFG} | grep "^ *auto *$(get_netcard_name)" )" == "" ]]; then
-				# åœ¨interfacesæ–‡ä»¶ä¸­æ²¡æœ‰å½“å‰ç½‘å¡çš„é…ç½®ï¼Œæ‰€ä»¥éœ€è¦è·å–ç›¸å…³ä¿¡æ¯ç„¶åå†™å…¥ï¼Œç„¶ååœ¨ä¿å­˜..
+			if [[ "$(cat ${IFUPDOWN_CFG} | grep "^ *auto *${connection_name}" )" == "" ]]; then
+				# ÔÚinterfacesÎÄ¼şÖĞÃ»ÓĞµ±Ç°Íø¿¨µÄÅäÖÃ£¬ËùÒÔĞèÒª»ñÈ¡Ïà¹ØĞÅÏ¢È»ºóĞ´Èë£¬È»ºóÔÚ±£´æ..
 				is_dhcp
 				if [[ $? -eq 0 ]]; then
-					sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet dhcp" >> ${IFUPDOWN_CFG}
+					sudo echo -e "auto ${connection_name}\niface ${connection_name} inet dhcp" >> ${IFUPDOWN_CFG}
 				else
-					sudo echo -e "auto $(get_netcard_name)\niface $(get_netcard_name) inet static" >> ${IFUPDOWN_CFG}
+					sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
 					sudo echo -e "address $(get_ip_addr)\nnetmask $(get_netmask)\ngateway $(get_gw)\nhwaddress ether $(get_mac_address)" >> ${IFUPDOWN_CFG}
 				fi
 			fi
@@ -445,6 +471,11 @@ function net_time_machine()
 		else
 			mkdir -p ${2%/*}
 			netsh -c interface dump > $2
+			is_dhcp
+			if [[ $? -eq 0 ]]; then
+				echo "interface ip set address name="${connection_name}" dhcp" >> $2
+				echo "interface ip set dns name="${connection_name}" dhcp" >> $2
+			fi
 			echo "# macaddress;$(get_mac_address)" >> $2
 			echo "# netcatd_id;$(get_netcard_id)" >> $2
 			echo "# reg_pos_of_mac;$(get_pos_of_mac_in_reg)" >> $2
@@ -465,9 +496,9 @@ function net_time_machine()
 }
 # }}}
 
-#{{{ æ£€æŸ¥ä¾èµ–
-# ç±»ä¼¼æˆ‘ä»¬ç¼–è¯‘ä¼—å¤šlinuxè½¯ä»¶æºä»£ç æ—¶configureç¨‹åºçš„ä½œç”¨
-# æ¥å—ä¸€ä¸ªå­—ç¬¦ä¸²å‚æ•°ï¼Œæ¯ä¸ªå‘½ä»¤ä¹‹é—´ç”¨ç©ºæ ¼éš”å¼€...
+#{{{ ¼ì²éÒÀÀµ
+# ÀàËÆÎÒÃÇ±àÒëÖÚ¶àlinuxÈí¼şÔ´´úÂëÊ±configure³ÌĞòµÄ×÷ÓÃ
+# ½ÓÊÜÒ»¸ö×Ö·û´®²ÎÊı£¬Ã¿¸öÃüÁîÖ®¼äÓÃ¿Õ¸ñ¸ô¿ª...
 function configure()
 {
 	local package_lack=""
@@ -492,43 +523,45 @@ function configure()
 
 #}}}
 
-# {{{è„šæœ¬å¼€å§‹
+# {{{½Å±¾¿ªÊ¼
 
-#  ç¯å¢ƒæ£€æŸ¥..
+#  »·¾³¼ì²é..
 if [[ "$(get_os_type)" == "Unix" ]]; then
 	configure "ifup ifdown resolvconf cat grep sed awk"
 	enable_ifupdown
-else
+elif [[ "$(get_os_type)" == "Nt5.1" ]]; then
 	configure "netsh devcon cat grep sed awk getmac reg"
+else
+	configure "netsh cat grep sed awk getmac reg"
 fi
 
-# å¤‡ä»½å½“å‰ç”¨æˆ·çš„ç½‘ç»œé…ç½®
+# ±¸·İµ±Ç°ÓÃ»§µÄÍøÂçÅäÖÃ
 if [[ ! -s "${ORIG_IFUPDOWN_CFG}" ]]; then # not exist or it's size is zero
 	net_time_machine "dump" ${ORIG_IFUPDOWN_CFG}
 fi
 
-# å¤§å¾ªç¯...
+# ´óÑ­»·...
 while [[ 1 ]]; do
-	declare -i nump=1 #è®¡æ•°.. 
-	# å¼€å§‹è¯»å–é…ç½®æ–‡ä»¶
+	declare -i nump=1 #¼ÆÊı.. 
+	# ¿ªÊ¼¶ÁÈ¡ÅäÖÃÎÄ¼ş
 	echo "Reading network config..."
 	if [[ -s "${USER_NETOWRK_CFG}" ]]; then
 		CFG_NAME=$(read_a_name_of_conf ${USER_NETOWRK_CFG} 1)
-		#æ²¡æœ‰æ‰¾åˆ°ä»»ä½•é…ç½®
+		#Ã»ÓĞÕÒµ½ÈÎºÎÅäÖÃ
 		if [[ "${CFG_NAME}" == "" ]]; then
 			read -n1 -p  "There are no config in ${USER_NETOWRK_CFG},would you like to add one?[y/n]" user_input
 			echo -e "\n"
 			if [[ "${user_input}" == "" || "${user_input}" == [yY] ]]; then
 				add_cfg
-				continue #è¿”å›é‡æ–°è¯»å–é…ç½®æ–‡ä»¶.. 
+				continue #·µ»ØÖØĞÂ¶ÁÈ¡ÅäÖÃÎÄ¼ş.. 
 			else
 				break
 			fi
 		fi
 
 		clear_screen
-		#æ‰“å°æ‰¾åˆ°çš„æ‰€æœ‰é…ç½®çš„åå­—
-		# è¾“å‡ºå‹å¥½çš„æç¤ºä¿¡æ¯è®©ç”¨æˆ·é€‰æ‹©
+		#´òÓ¡ÕÒµ½µÄËùÓĞÅäÖÃµÄÃû×Ö
+		# Êä³öÓÑºÃµÄÌáÊ¾ĞÅÏ¢ÈÃÓÃ»§Ñ¡Ôñ
 		echo  "This is network_quick_switch tool."
 		echo -e "-----------------------------------------"
 		echo  "0,restore default config."
@@ -550,7 +583,7 @@ while [[ 1 ]]; do
 			echo -e "\n"
 		done
 
-		#å¼€å§‹é…ç½®
+		#¿ªÊ¼ÅäÖÃ
 		if [[ "${user_input}" == 0 ]]; then
 			echo "Import original config..."
 			if [[ ! -e "${ORIG_IFUPDOWN_CFG}" ]]; then
@@ -574,16 +607,16 @@ while [[ 1 ]]; do
 			set_mac_addr ${CFG_MAC}
 			set_ip_addr ${CFG_IP}
 			set_dns ${CFG_DNS}
-			#é‡å¯ç½‘å¡..
+			#ÖØÆôÍø¿¨..
 		fi
 		reset_netcard
 		break
-	else #æ‰¾ä¸åˆ°é…ç½®é…ç½®æ–‡ä»¶è¯¢é—®æ˜¯å¦éœ€è¦å»ºç«‹ 
+	else #ÕÒ²»µ½ÅäÖÃÅäÖÃÎÄ¼şÑ¯ÎÊÊÇ·ñĞèÒª½¨Á¢ 
 		read -n1 -p  "There are no config in ${USER_NETOWRK_CFG},would you like to add one?[y]" user_input
 		echo -e "\n"
 		if [[ "${user_input}" == "" || "${user_input}" == [yY] ]]; then
 			add_cfg
-			continue #è¿”å›é‡æ–°è¯»å–é…ç½®æ–‡ä»¶.. 
+			continue #·µ»ØÖØĞÂ¶ÁÈ¡ÅäÖÃÎÄ¼ş.. 
 		else
 			break
 		fi
@@ -591,7 +624,7 @@ while [[ 1 ]]; do
 done
 
 rm -f ${TEMP_FILE}
-# ç»“æŸè¯­==!
+# ½áÊøÓï==!
 echo -e "-----------------------------------------"
 echo -e "Thank you for using network_quick_switch"
 echo -e "Contact me by email:tracyone@live.cn"
