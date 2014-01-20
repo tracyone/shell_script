@@ -1,11 +1,11 @@
 #!/bin/sh
 # author:tracyone,tracyone@live.cn
 # description:
-	# 个小脚本的功能快速切换切换网络配置，包括mac地址、IP地址和DNS
-	# 1,用户可以迅速的切换到任意配置好的ip配置上
-	# 2,用户可以迅速恢复到最初的ip配置上
-	# 3,用户可以在配置界面上添加/删除一个新的配置，也可以直接修改配置文件
-	# 4,此脚本将支持windows xp、windows 7、ubuntu及其衍生版和debian及其衍生版
+	# 这个小脚本的功能快速切换切换网络配置，包括mac地址、IP地址和DNS。
+	# 1,用户可以迅速的切换到任意配置好的ip配置上;
+	# 2,用户可以迅速恢复到最初的ip配置上;
+	# 3,用户可以在配置界面上添加/删除一个新的配置，也可以直接修改配置文件;
+	# 4,此脚本支持windows xp、windows 7、ubuntu及其衍生版和debian及其衍生版;
 	# 配置文件的格式:新一行以#开头的为注释，所有注释会被忽略,所有空行会被忽略
 	# 配置名:IP地址:MAC地址:DNS
 	# 你可以通过这条命令获得最新版本:git clone https://github.com/tracyone/shell_script.git
@@ -15,15 +15,18 @@
 	# 2014-01-20/01:35:54 windows7 sp1 x86 测试基本通过
 # help:
 	# 要想本脚本在linux和windows下都顺利执行的话，必须保证首先本文本的文件编码必须是cp936
-	# 其次本脚本的文字编码必须是unix
-	# 更多help ...以后补充
+	# 其次本脚本的文字编码必须是unix。
+	# 对于windows来说:必须安装MinGw或者CgyWin,另外windows xp的netsh有bug无法重启网卡所以,windows xp
+	# 还需要安装devcon(命令行程序),windows 7以及以上的必须以管理员权限运行mingw，或者把UAC调到最低。
+	# 对于linux来说:必须安装resolvconf和ifupdown,当然百分之90概率你的系统自带了这两个命令,没有的话就
+	# apt-get install 软件名 安装吧。
 # known bugs:
 	#
 
 # {{{环境变量接口
 ORIG_IFUPDOWN_CFG="/etc/network/interfaces.org" #此文件是ifdownup命令的配置文件的备份文件为了统一windows下同样使用这个文件..
 IFUPDOWN_CFG="/etc/network/interfaces" #此文件是ifdownup命令的配置文件为了统一windows下同样使用这个文件..
-USER_NETOWRK_CFG="quick_sw.txt" #本脚本网络配置文件 
+USER_NETOWRK_CFG="${HOME}/.network_quick_sw.conf" #本脚本网络配置文件 
 # 下面4个环境变量作为用户输入保存的地方..
 CFG_NAME=""
 CFG_IP=""
@@ -527,7 +530,7 @@ function configure()
 
 #  环境检查..
 if [[ "$(get_os_type)" == "Unix" ]]; then
-	configure "ifup ifdown resolvconf cat grep sed awk"
+	configure "ifup ifdown resolvconf cat grep sed awk vim"
 	enable_ifupdown
 elif [[ "$(get_os_type)" == "Nt5.1" ]]; then
 	configure "netsh devcon cat grep sed awk getmac reg"
@@ -570,45 +573,54 @@ while [[ 1 ]]; do
 			nump=${nump}+1
 			CFG_NAME=$(read_a_name_of_conf ${USER_NETOWRK_CFG} ${nump})
 		done
-		echo  "q,quit the script."
 		echo  "a,add a config."
+		echo  "e,open network config file"
 		echo  "s,Setting current network config as default"
+		echo  "q,quit the script."
 		echo -e "-----------------------------------------"
 
 		nump=${nump}-1
 		read -n1 -p  "Please input the character at the begin of each line:" user_input
 		echo -e "\n"
-		until [[ "${user_input}" == [0-${nump}qas] ]]; do
+		until [[ "${user_input}" == [0-${nump}qeas] ]]; do
 			read -n1 -p  "Error!Try again!Only 0 to ${nump} or q,a,s are allowed:" user_input
 			echo -e "\n"
 		done
 
-		#开始配置
-		if [[ "${user_input}" == 0 ]]; then
-			echo "Import original config..."
-			if [[ ! -e "${ORIG_IFUPDOWN_CFG}" ]]; then
-				echo "Import failed...no original config file!"
+		case ${user_input} in
+			0 )
+				echo "Import original config..."
+				if [[ ! -e "${ORIG_IFUPDOWN_CFG}" ]]; then
+					echo "Import failed...no original config file!"
+					continue
+				fi
+				net_time_machine "restore" ${ORIG_IFUPDOWN_CFG}
+				;;
+			q )
+				break
+				;;
+			a )
+				add_cfg
 				continue
-			fi
-			net_time_machine "restore" ${ORIG_IFUPDOWN_CFG}
-		elif [[ "${user_input}" == q ]]; then
-			break
-		elif [[ "${user_input}" == a ]]; then
-			add_cfg
-			continue
-		elif [[ "${user_input}" == s ]]; then
-			net_time_machine "dump" ${ORIG_IFUPDOWN_CFG}
-			break
-		else
-			CFG_NAME=$(read_a_name_of_conf ${USER_NETOWRK_CFG} ${user_input})
-			CFG_IP=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_IP_IDX})
-			CFG_MAC=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_MAC_IDX})
-			CFG_DNS=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_DNS_IDX})
-			set_mac_addr ${CFG_MAC}
-			set_ip_addr ${CFG_IP}
-			set_dns ${CFG_DNS}
-			#重启网卡..
-		fi
+				;;
+			e )
+				vim ${USER_NETOWRK_CFG}
+				continue
+				;;
+			s )
+				net_time_machine "dump" ${ORIG_IFUPDOWN_CFG}
+				break
+				;;
+			* )
+				CFG_NAME=$(read_a_name_of_conf ${USER_NETOWRK_CFG} ${user_input})
+				CFG_IP=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_IP_IDX})
+				CFG_MAC=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_MAC_IDX})
+				CFG_DNS=$(read_a_field_of_conf ${USER_NETOWRK_CFG} ${user_input} ${CFG_DNS_IDX})
+				set_mac_addr ${CFG_MAC}
+				set_ip_addr ${CFG_IP}
+				set_dns ${CFG_DNS}
+				;;
+		esac
 		reset_netcard
 		break
 	else #找不到配置配置文件询问是否需要建立 
