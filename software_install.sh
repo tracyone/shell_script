@@ -48,6 +48,7 @@ sudo apt-get lm-sensors -y
 sudo apt-get hddtemp -y
 sudo apt-get -y install nautilus-open-terminal
 sudo apt-get -y install dconf-editor
+sudo apt-get -y install gparted
 
 git clone https://github.com/tracyone/linux-config 
 
