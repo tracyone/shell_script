@@ -2,11 +2,11 @@
 # author:tracyone,tracyone@live.cn
 # date:2014-02-22/23:53:04
 # description:ubuntu装机脚本..
-# lastchange:2014-02-22/23:54:02
+# lastchange:2014-02-23/13:00:18
 
 mkdir ./temp
 echo "添加仓库------------------------------------"
-echo "添加 git 仓库.."
+echo "添加 git 仓库..."
 sudo add-apt-repository -y ppa:git-core/ppa
 echo "添加 mercurial 仓库..."
 sudo add-apt-repository -y ppa:mercurial-ppa/releases
@@ -92,12 +92,13 @@ mkdir ~/.fonts/
 cp ./program_font/* ~/.fonts/
 sudo fc-cache -f -v
 
-echo "安装 gvim"
+echo "安装 gvim..."
 sudo apt-get -y install vim-gtk
 mkdir ~/.vim
 git clone https://github.com/tracyone/vim.git ~/.vim/vim_rc
 cp ~/.vim/vim_rc/.vimrc ~
-echo "安装插件..."
+sudo echo "Defaults      always_set_home" >> /etc/sudoers
+echo "安装gvim插件...可能需要比较长时间..."
 gvim -c :BundleInstall &
 
 echo "清除工作...."
