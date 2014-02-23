@@ -97,7 +97,9 @@ sudo apt-get -y install vim-gtk
 mkdir ~/.vim
 git clone https://github.com/tracyone/vim.git ~/.vim/vim_rc
 cp ~/.vim/vim_rc/.vimrc ~
-sudo echo "Defaults      always_set_home" >> /etc/sudoers
+sudo echo "Defaults		always_set_home" >> /etc/sudoers
+sudo ln -s /home/tracyone/.vim /root/.vim
+sudo ln -s /home/tracyone/.vimrc /root/.vimrc
 echo "安装gvim插件...可能需要比较长时间..."
 gvim -c :BundleInstall &
 
