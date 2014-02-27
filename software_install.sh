@@ -73,6 +73,8 @@ sudo apt-get -y install dconf-editor
 sudo apt-get -y install gparted
 
 git clone https://github.com/tracyone/linux-config 
+sudo ln -s /usr/bin/make /usr/bin/gmake
+sudo cp ./linux-config/*.desktop /usr/share/applications/
 
 echo "安装oh my zsh..."
 rm -rf ~/.oh-my-zsh
@@ -82,7 +84,6 @@ echo "修改当前用户默认shell为zsh..."
 echo "待补充暂时不知道如何实现..."
 echo "恢复.zshrc"
 cp ./linux-config/.zshrc ~
-
 
 echo "安装adobe flash player..."
 wget http://fpdownload.macromedia.com/get/flashplayer/pdc/11.2.202.341/install_flash_player_11_linux.x86_64.tar.gz
@@ -114,6 +115,8 @@ sudo ln -s /home/tracyone/.vim /root/.vim
 sudo ln -s /home/tracyone/.vimrc /root/.vimrc
 echo "安装gvim插件...可能需要比较长时间..."
 gvim -c :BundleInstall &
+
+
 
 echo "清除工作...."
 echo "卸载多余软件..."
