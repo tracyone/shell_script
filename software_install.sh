@@ -16,6 +16,8 @@ echo "添加 fcitx 仓库..."
 sudo add-apt-repository -y ppa:fcitx-team/nightly
 echo "添加 pidgin 仓库..."
 sudo add-apt-repository -y ppa:lainme/pidgin-lwqq 
+echo "添加 wallch 仓库..."
+sudo add-apt-repository -y ppa:wallch/3+
 
 echo "Update source...."
 sudo apt-get update
@@ -42,13 +44,20 @@ echo "安装compiz特效管理..."
 sudo apt-get install compiz-plugins compiz-plugins-extra compizconfig-settings-manager -y
 
 echo "安装 qt4..."
-sudo apt-get install libqt4-dev libqt4-dbg libqt4-gui libqt4-sql qt4-dev-tools qt4-doc qt4-designer qt4-qtconfig -y
-
-echo "安装gimp,Inkscape等图形软件..."
-sudo apt-get install gimp Inkscape Dia -y
+sudo apt-get install libqt4-dev libqt4-dbg libqt4-gui \
+	libqt4-sql qt4-dev-tools \
+	qt4-doc qt4-designer qt4-qtconfig -y
 
 echo "安装java和java运行环境..."
 sudo apt-get install openjdk-7-jdk -y
+
+echo "安装CodeBlock..."
+sudo apt-get install codeblocks g++ wx-common libwxgtk3.0-0 \
+	build-essential  wxformbuilder codeblocks-dbg \
+	codeblocks-contrib wx3.0-headers wx3.0-exambles wx3.0-i18n -y
+
+echo "安装gimp,Inkscape等图形软件..."
+sudo apt-get install gimp Inkscape Dia -y
 
 echo "卸载ibus然后安装 fcitx 输入法..."
 sudo apt-get -y remove ibus
@@ -93,9 +102,6 @@ sudo cp -a temp/usr/* /usr
 rm -rf ./temp/*
 
 echo "下载专区------------------------------------"
-echo "下载 LoveWall paper"
-mkdir ./deb安装包
-wget http://s.qdcdn.com/lovebizhi/LoveWallpaper4Linux.deb ./deb安装包
 
 echo "安装字体...需要很长时间请耐心等待..."
 git clone https://github.com/tracyone/program_font
@@ -122,6 +128,7 @@ echo "清除工作...."
 echo "卸载多余软件..."
 sudo apt-get purge gwibber -y
 sudo apt-get purge totem -y
+sudo apt-get remove system-config-printer-gnome -y
 sudo apt-get autoremove -y
 sudo apt-get autoclean
 sudo apt-get clean
