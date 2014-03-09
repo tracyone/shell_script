@@ -18,6 +18,8 @@ echo "添加 pidgin 仓库..."
 sudo add-apt-repository -y ppa:lainme/pidgin-lwqq 
 echo "添加 wallch 仓库..."
 sudo add-apt-repository -y ppa:wallch/3+
+echo "添加 ubuntu-tweak 仓库..."
+sudo add-apt-repository -y ppa:tualatrix/ppa
 
 echo "Update source...."
 sudo apt-get update
@@ -38,7 +40,9 @@ sudo chgrp -R $(whoami) /opt/goagent
 sudo apt-get -y install python-vte
 echo "配置goagent..."
 python /opt/goagent/server/uploader.zip
-sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
+sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
+echo "开机启动goagent..."
+sudo sh -c "echo "python /opt/goagent/local/proxy.py" >> /etc/init.d/rc.local"
 
 echo "安装compiz特效管理..."
 sudo apt-get install compiz-plugins compiz-plugins-extra compizconfig-settings-manager -y
@@ -60,7 +64,7 @@ echo "安装gimp,Inkscape等图形软件..."
 sudo apt-get install gimp Inkscape Dia -y
 
 echo "卸载ibus然后安装 fcitx 输入法..."
-sudo apt-get -y remove ibus
+sudo apt-get -y remove '^ibus*'
 sudo apt-get -y install fcitx fcitx-config-gtk fcitx-sunpinyin fcitx-googlepinyin fcitx-module-cloudpinyin im-switch
 
 echo "安装 pidgin ... "
@@ -74,12 +78,12 @@ sudo apt-get -y install nautilus-open-terminal nautilus-actions
 
 echo "安装其它杂七杂八.."
 sudo apt-get -y install mercurial python-nautilus tortoisehg
-sudo apt-get -y install unrar p7zip-full zhcon xbacklight shutter wallch
+sudo apt-get -y install unrar p7zip-full zhcon xbacklight shutter wallch wmctrl
 sudo apt-get install vlc -y
 sudo apt-get lm-sensors -y
 sudo apt-get hddtemp -y
 sudo apt-get -y install dconf-editor
-sudo apt-get -y install gparted
+sudo apt-get -y install gparted ubuntu-tweak
 
 git clone https://github.com/tracyone/linux-config 
 sudo ln -s /usr/bin/make /usr/bin/gmake
@@ -116,7 +120,7 @@ sudo apt-get -y install vim-gtk
 mkdir ~/.vim
 git clone https://github.com/tracyone/vim.git ~/.vim/vim_rc
 cp ~/.vim/vim_rc/.vimrc ~
-sudo echo "Defaults		always_set_home" >> /etc/sudoers
+sudo sh -c "echo "Defaults		always_set_home" >> /etc/sudoers"
 sudo ln -s /home/tracyone/.vim /root/.vim
 sudo ln -s /home/tracyone/.vimrc /root/.vimrc
 echo "安装gvim插件...可能需要比较长时间..."
