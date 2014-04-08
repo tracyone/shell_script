@@ -68,34 +68,31 @@ sudo fc-cache -f -v
 echo "编译安装最新版本的gvim..."
 echo "安装编译gvim所需的依赖.."
 sudo apt-get build-dep vim -y
-sudo apt-get install lua50 liblua50-dev liblualib50-dev
-sudo ln -s /usr/include/lua50/ /usr/include/lua
-
+sudo apt-get install lua5.1 liblua51-dev liblualib51-dev
 if [[ ! -d "vim-src" ]];then
-    hg clone https://vim.googlecode.com/hg/ vim-src
-    rm -rf ./vim-src/src/auto/config.cache
-    cd vim-src/src
-    sudo make uninstall
-    make clean
-    cd -
-    rm -rf ./vim-src/src/auto/config.cache
-    cd vim-src/src
-    ./configure --with-x \
-    --with-features=huge \
-    --enable-luainterp=yes \
-    --enable-perlinterp=yes \
-    --enable-pythoninterp=yes \
-    --enable-tclinterp \
-    --enable-rubyinterp=yes \
-    --enable-gui=auto \
-    --enable-cscope \
-    --enable-multibyte \
-    --enable-fontset \
-    --disable-smack \
-    --with-compiledby=tracyone@live.cn
-    make
-    sudo make install
-    cd -
+	hg clone https://vim.googlecode.com/hg/ vim-src
+	cd vim-src/src
+	sudo make uninstall
+	make clean
+	sudo rm -rf ./auto/config.cache
+	./configure --with-x \
+		--with-features=huge \
+		--enable-luainterp=dynamic \
+		--enable-perlinterp=dynamic \
+		--enable-pythoninterp=dynamic \
+		--enable-tclinterp \
+		--enable-rubyinterp=dynamic \
+		--enable-gui=auto \
+		--enable-cscope \
+		--enable-multibyte \
+		--enable-fontset \
+		--disable-smack \
+		--enable-fail-if-missing \
+		--with-compiledby=tracyone@live.cn
+	if [[ $? -eq 0 ]];then
+		make && sudo make install
+	fi
+	cd -
 else
     cd vim-src
     hg pull
