@@ -30,6 +30,7 @@ git config --global user.name "tracyone"
 git config --global user.email "tracyone@live.cn"
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=86400'
+git config --global core.editor vim
 
 echo "安装goagent..."
 sleep 3
@@ -45,7 +46,7 @@ python /opt/goagent/server/uploader.zip
 sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
 echo "开机启动goagent..."
 sleep 3
-sudo echo "python /opt/goagent/local/proxy.py" | tee -a /etc/init.d/rc.local
+sudo echo "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
 
 echo "安装compiz特效管理..."
 sleep 3
@@ -137,13 +138,14 @@ sudo chmod -R a+x program_font/*
 sudo mkdir -p /usr/share/fonts/MyFonts
 mkdir ~/.fonts/
 cp ./program_font/* ~/.fonts/
+sudo cp ./program_font/* /usr/share/fonts/MyFonts
 sudo fc-cache -f -v
 
 echo "安装 gvim..."
 sudo apt-get -y install vim-gtk cscope exuberant-ctags
 mkdir ~/.vim
-git clone https://github.com/tracyone/vim.git ~/.vim/vim_rc
-cp ~/.vim/vim_rc/.vimrc ~
+git clone https://github.com/tracyone/vim.git ~/.vim/vim
+cp ~/.vim/vim/.vimrc ~
 sudo echo "Defaults		always_set_home" | sudo tee -a /etc/sudoers
 sudo ln -s /home/tracyone/.vim /root/.vim
 sudo ln -s /home/tracyone/.vimrc /root/.vimrc
