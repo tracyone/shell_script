@@ -78,6 +78,7 @@ sudo apt-get install fcitx fcitx-googlepinyin -y
 
 echo "嵌入式开发.."
 sudo apt-get install putty -y
+sudo apt-get install samba4 smbfs system-config-samba -y
 sudo apt-get install openbsd-inetd tftp-hpa tftpd-hpa -y
 sudo apt-get install nfs-kernel-server -y
 
