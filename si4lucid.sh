@@ -4,6 +4,27 @@
 # description:ubuntu 10.04 lucid lynx的装机脚本..
 # lastchange:2014-04-10/09:31:52
 
+# 类似我们编译众多linux软件源代码时configure程序的作用
+# 接受一个字符串参数，每个命令之间用空格隔开...
+function configure()
+{
+	local package_lack=""
+	for i in $1
+	do
+		which $i > /dev/null 2>&1
+		if [[ $? -ne 0 ]]; then
+			echo -e "Checking for $i ..... no"
+			package_lack="$i ${package_lack}"
+		else
+			echo -e "Checking for $i ..... yes"
+		fi
+	done	
+	if [[ ${package_lack} != "" ]]; then
+		echo "Please install ${package_lack} manually!"
+		exit 3
+	fi
+}
+
 sudo apt-get purge '^openoffice.org-.*' -y
 sudo apt-get purge ubuntuone-client -y
 sudo apt-get purge totem -y
@@ -41,6 +62,7 @@ git config --global user.email "tracyone@live.cn"
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=86400'
 git config --global core.editor vim
+
 
 echo "安装java和java运行环境..."
 sleep 3
@@ -127,8 +149,12 @@ echo "待补充暂时不知道如何实现..."
 echo "恢复.zshrc"
 cp ./linux-config/.zshrc ~
 
-echo "Install adobe flash player for firefox ..."
 
+echo "安装最新版本的firefox .."
+wget -r -nd -np -A 'firefox*.tar.bz2' http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest/linux-i686/zh-CN/ 
+sudo tar -xvf firefox*.tar.bz2 -C /opt/
+
+echo "为firefox安装adboe flash player"
 mkdir si_temp
 if [[ ! -f "install_flash_player_11_linux.i386.tar.gz" ]];then
    wget --no-check-certificate http://fpdownload.macromedia.com/get/flashplayer/pdc/11.2.202.350/install_flash_player_11_linux.i386.tar.gz

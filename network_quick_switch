@@ -14,6 +14,7 @@
 	# 2014-01-18/18:01:55 ubuntu 10.04 lucid 测试成功
 	# 2014-01-20/01:35:54 windows7 sp1 x86 测试基本通过
 	# 2014-04-10/13:49:38 ubuntu下解决sudo echo权限不够的问题
+	# 2014-04-10/22:32:48 修改函数configure使其更具独立性和bug fix..
 # help:
 	# 要想本脚本在linux和windows下都顺利执行的话，必须保证首先本文本的文件编码必须是cp936
 	# 其次本脚本的文字编码必须是unix。
@@ -66,7 +67,7 @@ function get_os_type()
 }
 #}}}
 
-#{{{ clear screen
+#{{{ 清屏..
 function clear_screen()
 {
 	# clear screen
@@ -230,7 +231,7 @@ function read_a_name_of_conf()
 }
 #}}}
 
-#{{{  return the name of netcard name
+#{{{  返回网卡的名字..
 function get_netcard_name()
 {
 	if [[ $(get_os_type) == "Unix" ]]; then
@@ -241,6 +242,7 @@ function get_netcard_name()
 
 	if [[ "${net_card_str}" == "" ]]; then
 		read -p  "There are no connection right now,please enter the name of connection" user_input
+		echo -e "\n"
 		net_card_str=${user_input}
 	fi
 
@@ -328,7 +330,7 @@ function set_ip_addr()
 			sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *iface.*/iface ${connection_name} inet static/}" ${IFUPDOWN_CFG}
 			# 判断是否存在address关键字，不存在的话在在第二个auto的前一行插入address及其ip地址..和默认netmask
 			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *address.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\naddress $1/g}" ${IFUPDOWN_CFG}
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\naddress $1/g}" ${IFUPDOWN_CFG}
 			else
 				# 如果已经存在了那么匹配address语句并整行替换...
 				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *address.*/address $1/}" ${IFUPDOWN_CFG}
@@ -336,7 +338,7 @@ function set_ip_addr()
 
 			# netmask
 			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *netmask.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\nnetmask 255.255.255.0/g}" ${IFUPDOWN_CFG}
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\nnetmask 255.255.255.0/g}" ${IFUPDOWN_CFG}
 			else
 				# 如果已经存在了那么匹配address语句并整行替换...
 				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *netmask.*/netmask 255.255.255.0/}" ${IFUPDOWN_CFG}
@@ -344,7 +346,7 @@ function set_ip_addr()
 
 			# gateway
 			if [[ "$(sed -n "/^ *auto .*${connection_name}/,/^ *auto/{/^ *gateway.*/p}" ${IFUPDOWN_CFG})" == "" ]]; then
-				sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway ${1%.*}.1/g}" ${IFUPDOWN_CFG}
+				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/\(^ *iface.*\)/\1\ngateway ${1%.*}.1/g}" ${IFUPDOWN_CFG}
 			else
 				sudo sed -ie "/^ *auto .*${connection_name}/,/^ *auto/{s/^ *gateway.*/gateway ${1%.*}.1/}" ${IFUPDOWN_CFG}
 			fi
@@ -508,7 +510,7 @@ function configure()
 	local package_lack=""
 	for i in $1
 	do
-		which $i > ${TEMP_FILE} 2>&1
+		which $i > /dev/null 2>&1
 		if [[ $? -ne 0 ]]; then
 			echo -e "Checking for $i ..... no"
 			package_lack="$i ${package_lack}"
@@ -518,10 +520,8 @@ function configure()
 	done	
 	if [[ ${package_lack} != "" ]]; then
 		echo "Please install ${package_lack} manually!"
-		rm -f ${TEMP_FILE}
 		exit 3
 	fi
-	rm -f ${TEMP_FILE}
 }
 #}}}
 
