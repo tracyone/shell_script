@@ -1,3 +1,9 @@
+# file:si4lucid.sh
+# author:tracyone,tracyone@live.cn
+# date:2014-04-10/09:31:48
+# description:ubuntu 10.04 lucid lynx的装机脚本..
+# lastchange:2014-04-10/09:31:52
+
 sudo apt-get purge '^openoffice.org-.*' -y
 sudo apt-get purge ubuntuone-client -y
 sudo apt-get purge totem -y
@@ -19,7 +25,9 @@ sudo add-apt-repository ppa:shutter/ppa
 echo "add synapse ppa ..."
 sudo add-apt-repository ppa:synapse-core/ppa
 echo "add fcitx ppa..."
-sudo apt-add-repository ppa:fcitx-team/nightly
+sudo add-apt-repository ppa:fcitx-team/nightly
+echo "add wine ppa ..."
+sudo add-apt-repository ppa:ubuntu-wine/ppa
 
 echo "更新源...."
 sudo apt-get update
@@ -76,11 +84,32 @@ sudo apt-get install shutter -y
 sudo apt-get install synapse -y
 sudo apt-get install fcitx fcitx-googlepinyin -y
 
+echo "Install wine ..."
+sudo apt-get install wine -y
+
 echo "嵌入式开发.."
 sudo apt-get install putty -y
 sudo apt-get install samba4 smbfs system-config-samba -y
 sudo apt-get install openbsd-inetd tftp-hpa tftpd-hpa -y
 sudo apt-get install nfs-kernel-server -y
+sudo apt-get install bison flex mtd-utils -y
+echo "设置tftp..."
+mkdir ~/tftpboot
+chmod 777 ~/tftpboot
+sudo echo -e "RUN_DAEMON=\"yes\"" | sudo tee  /etc/default/tftpd-hpa
+sudo echo -e "OPTIONS=\"-l -s -c /home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
+sudo echo -e "TFTP_USERNAME=\"root\"" | sudo tee -a /etc/default/tftpd-hpa
+sudo echo -e "TFTP_DIRECTORY=\"/home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
+sudo echo -e "TFTP_ADDRESS=\"0.0.0.0:69\"" | sudo tee -a /etc/default/tftpd-hpa
+sudo echo -e "TFTP_OPTIONS=\"--secure\"" | sudo tee -a /etc/default/tftpd-hpa
+sudo service tftpd-hpa restart
+
+echo "设置nfs..."
+mkdir ~/nfsroot
+chmod 777 ~/nfsroot
+sudo echo -e "/home/$(whoami)/nfsroot *(rw,no_root_squash,no_all_squash,sync)" | sudo tee -a /etc/exports
+sudo exportfs -av
+sudo service nfs-kernel-server restart 
 
 if [[ ! -d "linux-config" ]];then
    git clone https://github.com/tracyone/linux-config 

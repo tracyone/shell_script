@@ -46,7 +46,7 @@ python /opt/goagent/server/uploader.zip
 sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
 echo "开机启动goagent..."
 sleep 3
-sudo echo "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
+sudo echo -e "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
 
 echo "安装compiz特效管理..."
 sleep 3
@@ -146,7 +146,7 @@ sudo apt-get -y install vim-gtk cscope exuberant-ctags
 mkdir ~/.vim
 git clone https://github.com/tracyone/vim.git ~/.vim/vim
 cp ~/.vim/vim/.vimrc ~
-sudo echo "Defaults		always_set_home" | sudo tee -a /etc/sudoers
+sudo echo -e "Defaults\talways_set_home" | sudo tee -a /etc/sudoers
 sudo ln -s /home/tracyone/.vim /root/.vim
 sudo ln -s /home/tracyone/.vimrc /root/.vimrc
 echo "安装gvim插件...可能需要比较长时间..."
