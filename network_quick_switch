@@ -13,6 +13,7 @@
 	# 2014-01-17/22:37:25 windows xp sp3测试成功
 	# 2014-01-18/18:01:55 ubuntu 10.04 lucid 测试成功
 	# 2014-01-20/01:35:54 windows7 sp1 x86 测试基本通过
+	# 2014-04-10/13:49:38 ubuntu下解决sudo echo权限不够的问题
 # help:
 	# 要想本脚本在linux和windows下都顺利执行的话，必须保证首先本文本的文件编码必须是cp936
 	# 其次本脚本的文字编码必须是unix。
@@ -317,10 +318,10 @@ function set_ip_addr()
 	if [[ $(get_os_type) == "Unix" ]]; then
 		# 配置中不存在该网卡的配置..
 		if [[ "$(grep "^ *auto .*${connection_name}" ${IFUPDOWN_CFG})" == "" ]]; then
-			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
-			sudo echo -e "address $1" >> ${IFUPDOWN_CFG}
-			sudo echo -e "netmask 255.255.255.0" >> ${IFUPDOWN_CFG}
-			sudo echo -e  "gateway ${1%.*}.1" >> ${IFUPDOWN_CFG}
+			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" | sudo tee -a ${IFUPDOWN_CFG}
+			sudo echo -e "address $1" | sudo tee -a ${IFUPDOWN_CFG}
+			sudo echo -e "netmask 255.255.255.0" | sudo tee -a  ${IFUPDOWN_CFG}
+			sudo echo -e  "gateway ${1%.*}.1" | sudo tee -a ${IFUPDOWN_CFG}
 		else
 			# 配置中出现该网卡的配置，那么我们将强制改为静态ip地址..
 			# 插入iface语句并设置了静态
@@ -364,7 +365,7 @@ function set_dns()
 		# 先判断是否添加了重复的..
 		if [[ "$(cat /etc/resolvconf/resolv.conf.d/base | grep $1 )" == "" ]]; then
 			# 下面这个文件只有在你的系统安装了resolvconf之后才会出现..
-			sudo echo "nameserver "$1 >> /etc/resolvconf/resolv.conf.d/base
+			sudo echo "nameserver "$1 | sudo tee -a /etc/resolvconf/resolv.conf.d/base
 		fi
 	else
 		netsh interface ip set dns name="${connection_name}" source=static addr=$1 register=PRIMARY 2> ${TEMP_FILE}
@@ -381,8 +382,8 @@ function set_gw()
 	echo "Setting gateway address $1 ..."
 	if [[ $(get_os_type) == "Unix" ]]; then
 		if [[ "$(grep "^ *auto .*${connection_name}" ${IFUPDOWN_CFG})" == "" ]]; then
-			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
-			sudo echo -e "gateway $1" >> ${IFUPDOWN_CFG}
+			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" | sudo tee -a ${IFUPDOWN_CFG}
+			sudo echo -e "gateway $1" | sudo tee -a ${IFUPDOWN_CFG}
 		else
 			# 配置中出现该网卡的配置，那么我们将强制改为静态ip地址..
 			# 插入iface语句并设置了静态
@@ -425,8 +426,8 @@ function set_mac_addr()
 	echo "Setting mac address $1 ..."
 	if [[ $(get_os_type) == "Unix" ]]; then
 		if [[ "$(grep "^ *auto .*${connection_name}" ${IFUPDOWN_CFG})" == "" ]]; then
-			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
-			sudo echo -e "hwaddress ether $1" >> ${IFUPDOWN_CFG}
+			sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" | sudo tee -a ${IFUPDOWN_CFG}
+			sudo echo -e "hwaddress ether $1" | sudo tee -a ${IFUPDOWN_CFG}
 		else
 			# 配置中出现该网卡的配置，那么我们将强制改为静态
 			# 插入iface语句并设置了静态
@@ -464,10 +465,10 @@ function net_time_machine()
 				# 在interfaces文件中没有当前网卡的配置，所以需要获取相关信息然后写入，然后在保存..
 				is_dhcp
 				if [[ $? -eq 0 ]]; then
-					sudo echo -e "auto ${connection_name}\niface ${connection_name} inet dhcp" >> ${IFUPDOWN_CFG}
+					sudo echo -e "auto ${connection_name}\niface ${connection_name} inet dhcp" | sudo tee -a ${IFUPDOWN_CFG}
 				else
-					sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" >> ${IFUPDOWN_CFG}
-					sudo echo -e "address $(get_ip_addr)\nnetmask $(get_netmask)\ngateway $(get_gw)\nhwaddress ether $(get_mac_address)" >> ${IFUPDOWN_CFG}
+					sudo echo -e "auto ${connection_name}\niface ${connection_name} inet static" | sudo tee -a  ${IFUPDOWN_CFG}
+					sudo echo -e "address $(get_ip_addr)\nnetmask $(get_netmask)\ngateway $(get_gw)\nhwaddress ether $(get_mac_address)" | sudo tee -a ${IFUPDOWN_CFG}
 				fi
 			fi
 			sudo cp -a ${IFUPDOWN_CFG} $2
@@ -530,7 +531,7 @@ function configure()
 
 #  环境检查..
 if [[ "$(get_os_type)" == "Unix" ]]; then
-	configure "ifup ifdown resolvconf cat grep sed awk vim"
+	configure "ifup ifdown resolvconf cat grep sed awk vim tee"
 	enable_ifupdown
 elif [[ "$(get_os_type)" == "Nt5.1" ]]; then
 	configure "netsh devcon cat grep sed awk getmac reg"

@@ -83,6 +83,7 @@ sudo apt-get install vlc -y
 sudo apt-get install shutter -y
 sudo apt-get install synapse -y
 sudo apt-get install fcitx fcitx-googlepinyin -y
+sudo apt-get install resolvconf -y
 
 echo "Install wine ..."
 sudo apt-get install wine -y
