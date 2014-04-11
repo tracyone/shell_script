@@ -91,7 +91,7 @@ sudo apt-get install codeblocks g++ wx-common libwxgtk2.8-0 build-essential  wxf
 
 echo "安装 pidgin ... "
 sleep 3
-sudo apt-get install libpurple0 pidgin
+sudo apt-get install libpurple0 pidgin -y
 
 echo "安装nautils相关..."
 sleep 3
