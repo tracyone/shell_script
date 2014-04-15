@@ -60,11 +60,11 @@ sudo chgrp -R $(whoami) /opt/goagent
 sudo apt-get -y install python-vte
 echo "配置goagent..."
 sleep 3
-python2.7 /opt/goagent/server/uploader.zip
+python /opt/goagent/server/uploader.zip
 sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
 echo "开机启动goagent..."
 sleep 3
-sudo echo "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
+sudo echo "python2.7 /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
 
 
 echo "安装CodeBlock..."
@@ -86,7 +86,7 @@ sudo apt-get  install unrar p7zip-full zhcon wmctrl -y
 sudo apt-get install vlc -y
 sudo apt-get install shutter -y
 sudo apt-get install synapse -y
-sudo apt-get install fcitx fcitx-googlepinyin -y
+sudo apt-get install fcitx fcitx-googlepinyin fcitx-module-cloudpinyin -y
 sudo apt-get install resolvconf -y
 
 echo "Install wine ..."
