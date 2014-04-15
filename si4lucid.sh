@@ -45,7 +45,6 @@ git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=86400'
 git config --global core.editor vim
 
-
 echo "安装java和java运行环境..."
 sleep 3
 sudo apt-get install openjdk-7-jdk -y
@@ -65,7 +64,6 @@ sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/
 echo "开机启动goagent..."
 sleep 3
 sudo echo "python2.7 /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
-
 
 echo "安装CodeBlock..."
 sleep 3
@@ -94,25 +92,24 @@ sudo apt-get install wine -y
 
 echo "嵌入式开发.."
 sudo apt-get install putty -y
-sudo apt-get install samba4 smbfs system-config-samba -y
 sudo apt-get install openbsd-inetd tftp-hpa tftpd-hpa -y
 sudo apt-get install nfs-kernel-server -y
 sudo apt-get install bison flex mtd-utils -y
 echo "设置tftp..."
 mkdir ~/tftpboot
 chmod 777 ~/tftpboot
-sudo echo -e "RUN_DAEMON=\"yes\"" | sudo tee  /etc/default/tftpd-hpa
-sudo echo -e "OPTIONS=\"-l -s -c /home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
-sudo echo -e "TFTP_USERNAME=\"root\"" | sudo tee -a /etc/default/tftpd-hpa
-sudo echo -e "TFTP_DIRECTORY=\"/home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
-sudo echo -e "TFTP_ADDRESS=\"0.0.0.0:69\"" | sudo tee -a /etc/default/tftpd-hpa
-sudo echo -e "TFTP_OPTIONS=\"--secure\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "RUN_DAEMON=\"yes\"" | sudo tee  /etc/default/tftpd-hpa
+echo -e "OPTIONS=\"-l -s -c /home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_USERNAME=\"root\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_DIRECTORY=\"/home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_ADDRESS=\"0.0.0.0:69\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_OPTIONS=\"--secure\"" | sudo tee -a /etc/default/tftpd-hpa
 sudo service tftpd-hpa restart
 
 echo "设置nfs..."
 mkdir ~/nfsroot
 chmod 777 ~/nfsroot
-sudo echo -e "/home/$(whoami)/nfsroot *(rw,no_root_squash,no_all_squash,sync)" | sudo tee -a /etc/exports
+echo -e "/home/$(whoami)/nfsroot *(rw,no_root_squash,no_all_squash,sync)" | sudo tee -a /etc/exports
 sudo exportfs -av
 sudo service nfs-kernel-server restart 
 

@@ -46,7 +46,7 @@ python /opt/goagent/server/uploader.zip
 sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
 echo "开机启动goagent..."
 sleep 3
-sudo echo -e "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
+echo -e "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
 
 echo "安装compiz特效管理..."
 sleep 3
@@ -98,6 +98,28 @@ sudo apt-get hddtemp -y
 sudo apt-get -y install dconf-editor
 sudo apt-get -y install gparted ubuntu-tweak
 
+echo "嵌入式开发.."
+sudo apt-get install putty -y
+sudo apt-get install openbsd-inetd tftp-hpa tftpd-hpa -y
+sudo apt-get install nfs-kernel-server -y
+sudo apt-get install bison flex mtd-utils -y
+echo "设置tftp..."
+mkdir ~/tftpboot
+chmod 777 ~/tftpboot
+echo -e "RUN_DAEMON=\"yes\"" | sudo tee  /etc/default/tftpd-hpa
+echo -e "OPTIONS=\"-l -s -c /home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_USERNAME=\"root\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_DIRECTORY=\"/home/$(whoami)/tftpboot\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_ADDRESS=\"0.0.0.0:69\"" | sudo tee -a /etc/default/tftpd-hpa
+echo -e "TFTP_OPTIONS=\"--secure\"" | sudo tee -a /etc/default/tftpd-hpa
+sudo service tftpd-hpa restart
+echo "设置nfs..."
+mkdir ~/nfsroot
+chmod 777 ~/nfsroot
+echo -e "/home/$(whoami)/nfsroot *(rw,no_root_squash,no_all_squash,sync)" | sudo tee -a /etc/exports
+sudo exportfs -av
+sudo service nfs-kernel-server restart 
+
 if [[ ! -d "linux-config" ]];then
    git clone https://github.com/tracyone/linux-config 
 fi
@@ -146,7 +168,7 @@ sudo apt-get -y install vim-gtk cscope exuberant-ctags
 mkdir ~/.vim
 git clone https://github.com/tracyone/vim.git ~/.vim/vim
 cp ~/.vim/vim/.vimrc ~
-sudo echo -e "Defaults\talways_set_home" | sudo tee -a /etc/sudoers
+echo -e "Defaults\talways_set_home" | sudo tee -a /etc/sudoers
 sudo ln -s /home/tracyone/.vim /root/.vim
 sudo ln -s /home/tracyone/.vimrc /root/.vimrc
 echo "安装gvim插件...可能需要比较长时间..."
