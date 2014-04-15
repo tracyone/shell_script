@@ -4,27 +4,6 @@
 # description:ubuntu 10.04 lucid lynx的装机脚本..
 # lastchange:2014-04-10/09:31:52
 
-# 类似我们编译众多linux软件源代码时configure程序的作用
-# 接受一个字符串参数，每个命令之间用空格隔开...
-function configure()
-{
-	local package_lack=""
-	for i in $1
-	do
-		which $i > /dev/null 2>&1
-		if [[ $? -ne 0 ]]; then
-			echo -e "Checking for $i ..... no"
-			package_lack="$i ${package_lack}"
-		else
-			echo -e "Checking for $i ..... yes"
-		fi
-	done	
-	if [[ ${package_lack} != "" ]]; then
-		echo "Please install ${package_lack} manually!"
-		exit 3
-	fi
-}
-
 sudo apt-get purge '^openoffice.org-.*' -y
 sudo apt-get purge ubuntuone-client -y
 sudo apt-get purge totem -y
@@ -32,6 +11,7 @@ sudo apt-get purge rhythmbox -y
 sudo apt-get purge empathy -y
 sudo apt-get purge firefox -y
 sudo apt-get purge ibus -y
+sudo apt-get purge evolution -y
 
 echo "添加 mercurial 仓库..."
 sudo add-apt-repository  ppa:mercurial-ppa/releases
@@ -49,6 +29,8 @@ echo "add fcitx ppa..."
 sudo add-apt-repository ppa:fcitx-team/nightly
 echo "add wine ppa ..."
 sudo add-apt-repository ppa:ubuntu-wine/ppa
+echo "add python2.7 ppa .."
+sudo add-apt-repository ppa:fkrull/deadsnakes
 
 echo "更新源...."
 sudo apt-get update
@@ -78,7 +60,7 @@ sudo chgrp -R $(whoami) /opt/goagent
 sudo apt-get -y install python-vte
 echo "配置goagent..."
 sleep 3
-python /opt/goagent/server/uploader.zip
+python2.7 /opt/goagent/server/uploader.zip
 sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
 echo "开机启动goagent..."
 sleep 3
@@ -163,6 +145,11 @@ tar -xvf install_flash_player_11_linux.i386.tar.gz -C ./si_temp
 sudo cp -a si_temp/libflashplayer.so /usr/lib/mozilla/plugins
 sudo cp -a si_temp/usr/* /usr
 rm -rf ./si_temp/
+
+echo "安装python 2.7..."
+sudo apt-get install python-pip -y
+sudo easy_install pip -y
+sudo apt-get install python2.7
 
 echo "安装字体...需要很长时间请耐心等待..."
 if [[ ! -d "program_font" ]];then
