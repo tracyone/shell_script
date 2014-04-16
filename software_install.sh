@@ -54,7 +54,7 @@ sudo apt-get install compiz-plugins compiz-plugins-extra compizconfig-settings-m
 
 echo "安装 qt4..."
 sleep 3
-sudo apt-get install libqt4-dev libqt4-dbg libqt4-gui libqt4-sql qt4-dev-tools qt4-doc qt4-designer qt4-qtconfig -y
+sudo apt-get install libqt4-dev libqt4-dbg libqt4-gui libqt4-sql qt4-dev-tools qt4-doc qt4-designer qt4-qtconfig qtcreator -y
 
 echo "安装java和java运行环境..."
 sleep 3
