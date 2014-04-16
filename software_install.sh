@@ -148,7 +148,7 @@ fi
 tar -xvf install_flash_player_11_linux.x86_64.tar.gz -C ./temp
 sudo cp -a temp/libflashplayer.so /usr/lib/mozilla/plugins
 sudo cp -a temp/usr/* /usr
-rm -rf ./temp/*
+rm -rf ./temp/
 
 echo "下载专区------------------------------------"
 
