@@ -4,6 +4,9 @@
 # description:ubuntu 10.04 lucid lynx的装机脚本..
 # lastchange:2014-04-10/09:31:52
 
+read -p "请输入您的密码:" mypasswd
+alias sudo='echo ${mypasswd} | sudo -S'
+
 sudo apt-get purge '^openoffice.org-.*' -y
 sudo apt-get purge ubuntuone-client -y
 sudo apt-get purge totem -y
