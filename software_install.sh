@@ -4,6 +4,17 @@
 # description:ubuntu装机脚本..
 # lastchange:2014-04-01
 
+# 判断是32位还是64位系统
+MACHINE_TYPE=`uname -m`
+if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+  is_64=1
+else
+  is_64=0
+fi
+
+read -p "请输入您的密码:" mypasswd
+alias sudo='echo ${mypasswd} | sudo -S'
+
 mkdir ./temp
 echo "添加仓库------------------------------------"
 sleep 3
@@ -15,13 +26,23 @@ echo "添加 tortoisehg 仓库..."
 sudo add-apt-repository -y ppa:tortoisehg-ppa/releases
 echo "添加 pidgin 仓库..."
 sudo add-apt-repository -y ppa:lainme/pidgin-lwqq 
-echo "添加 wallch 仓库..."
-sudo add-apt-repository -y ppa:wallch/3+
 echo "添加 ubuntu-tweak 仓库..."
 sudo add-apt-repository -y ppa:tualatrix/ppa
+echo "添加 skype 仓库..."
+sudo add-apt-repository -y "deb http://archive.canonical.com/ $(lsb_release -sc) partner"
+echo "添加darktable 仓库..."
+sudo add-apt-repository -y ppa:pmjdebruijn/darktable-release
+sudo add-apt-repository -y ppa:pmjdebruijn/darktable-release-plus
+echo "添加google drive 仓库..."
+sudo add-apt-repository -y sudo add-apt-repository ppa:thefanclub/grive-tools
+echo "Support i386 architecture"
+sudo dpkg --add-architecture i386
 
 echo "更新源...."
 sudo apt-get update
+
+echo "更新系统..."
+sudo apt-get dist-upgrade -y
 
 echo "安装和配置 git svn等版本管理工具...."
 sleep 3
@@ -66,7 +87,7 @@ sudo apt-get install codeblocks g++ wx-common libwxgtk3.0-0 build-essential  wxf
 
 echo "安装gimp,Inkscape等图形软件..."
 sleep 3
-sudo apt-get install gimp Inkscape Dia -y
+sudo apt-get install gimp Inkscape Dia darktable darktable-plugins-experimental darktable-plugins-legacy -y
 
 echo "安装 fcitx 输入法..."
 sleep 3
@@ -95,6 +116,8 @@ sudo apt-get  install unrar p7zip-full zhcon xbacklight shutter wallch wmctrl -y
 sudo apt-get install vlc -y
 sudo apt-get lm-sensors -y
 sudo apt-get hddtemp -y
+sudo apt-get skype -y
+sudo apt-get grive-tools -y
 sudo apt-get -y install dconf-editor
 sudo apt-get -y install gparted ubuntu-tweak
 
@@ -135,8 +158,6 @@ echo "待补充暂时不知道如何实现..."
 echo "恢复.zshrc"
 cp ./linux-config/.zshrc ~
 
-echo "Install i386 library"
-sudo apt-get install libxtst6:i386 libxi6:i386 libfreetype6:i386 libstdc++:i386 -y
 
 echo "Install steam..."
 sudo apt-get install steam steam-launcher -y
@@ -151,6 +172,23 @@ sudo cp -a temp/usr/* /usr
 rm -rf ./temp/
 
 echo "下载专区------------------------------------"
+sudo apt-get install nautilus-dropbox -y
+
+sudo mkdir deb_file
+cd deb_file
+echo "下载搜狗输入法..."
+echo "下载dropbox ..."
+if [[ ${is_64} == "0" ]]; then
+	wget "http://pinyin.sogou.com/linux/download.php?f=linux&bit=32"
+	wget  "https://linux.dropbox.com/packages/ubuntu/dropbox_1.6.2_i386.deb" 
+else
+	wget "http://pinyin.sogou.com/linux/download.php?f=linux&bit=64"
+	wget  "https://linux.dropbox.com/packages/ubuntu/dropbox_1.6.2_amd64.deb" 
+fi
+sudo dpkg -i *.deb 
+cd ..
+rm -rf deb_file
+
 
 echo "安装字体...需要很长时间请耐心等待..."
 if [[ ! -d "program_font" ]];then
