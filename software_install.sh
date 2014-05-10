@@ -64,7 +64,7 @@ sudo apt-get -y install python-vte
 echo "配置goagent..."
 sleep 3
 python /opt/goagent/server/uploader.zip
-sudo sed -ie 's/^appid.*/appid = tracyone1989|tracyone1990/' /opt/goagent/local/proxy.ini
+sudo sed -ie 's/^appid.*/appid = raoxiaowen1989|raoxiaowen1990|raoxiaowen1991|raoxiaowen1992/' /opt/goagent/local/proxy.ini
 echo "开机启动goagent..."
 sleep 3
 echo -e "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
