@@ -4,7 +4,7 @@
 
 shopt -s expand_aliases
 read -p "请输入您的密码:" mypasswd
-alias sudo="echo ${mypasswd} | sudo -S"
+alias sudo="echo "${mypasswd}" | sudo -S"
 
 while [[ 1 ]]; do
 	clear
@@ -27,22 +27,36 @@ while [[ 1 ]]; do
 			if [[ -f "/etc/rc2.d/S20openbsd-inetd" ]]; then
 				echo "禁止tftp自动启动..."
 				sudo mv /etc/rc2.d/S20openbsd-inetd /etc/rc2.d/K20openbsd-inetd 
+				sleep 2
+				echo "关闭tftp服务..."
+				sudo service tftpd-hpa stop
+				sleep 1
 			else
 				echo "开启tftp自动启动..."
 				sudo mv /etc/rc2.d/K20openbsd-inetd /etc/rc2.d/S20openbsd-inetd 
+				sleep 2
+				echo "开启tftp服务..."
+				sudo service tftpd-hpa start
+				sleep 1
 			fi
-			sleep 4
 			continue
 			;;
 		1 )
 			if [[ -f "/etc/rc2.d/S20nfs-kernel-server" ]]; then
 				echo "禁止nfs自动启动..."
 				sudo mv /etc/rc2.d/S20nfs-kernel-server /etc/rc2.d/K20nfs-kernel-server
+				sleep 2
+				echo "停止nfs服务..."
+				sudo service nfs-kernel-server stop
+				sleep 1
 			else
 				echo "开启nfs自动启动..."
 				sudo mv /etc/rc2.d/K20nfs-kernel-server /etc/rc2.d/S20nfs-kernel-server
+				sleep 2
+				echo "开启nfs服务..."
+				sudo service nfs-kernel-server start
+				sleep 1
 			fi
-			sleep 4
 			continue
 			;;
 		2 )
@@ -52,11 +66,15 @@ while [[ 1 ]]; do
 				cp /etc/init.d/rc.local ./tmp
 				echo "python2.7 /opt/goagent/local/proxy.py" | tee -a tmp
 				sudo mv tmp /etc/init.d/rc.local
+				sleep 2
 			else
 				echo "禁止goagent自动启动..."
 				sudo sed -i '/proxy.py/d' /etc/init.d/rc.local
+				sleep 2
+				echo "停止goagent..."
+				sudo killall python
+				sleep 1
 			fi
-			sleep 4
 			continue
 			;;
 		s )
@@ -66,17 +84,19 @@ while [[ 1 ]]; do
 			else
 				echo "goagent: yes"
 			fi
+			sleep 1
 			if [[ -f "/etc/rc2.d/S20openbsd-inetd" ]]; then
 				echo "tftp: yes"
 			else
 				echo "tftp: no"
 			fi
+			sleep 1
 			if [[ -f "/etc/rc2.d/S20nfs-kernel-server" ]]; then
 				echo "nfs: yes"
 			else
 				echo "nfs: no"
 			fi
-			sleep 6
+			sleep 1
 			continue
 			;;
 		c )
