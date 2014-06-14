@@ -18,6 +18,7 @@
 6. 配置名:IP地址:MAC地址:DNS
 
 **注意事项** 
+
 1. 要想本脚本在linux和windows下都顺利执行的话，必须保证首先本文本的文件编码必须是cp936
 2. 其次本脚本的文字编码必须是unix
 3. 对于windows来说:必须安装MinGw或者CgyWin,另外windows xp的netsh有bug无法重启网卡所以,windows xp
@@ -44,8 +45,10 @@
 
 语法举例:
 
-	xlight -dec 10 #减少百分之10的亮度
-	xlight -inc 34 #增加百分之34的亮度
-	xlight  #读取配置文件恢复指定的亮度
+```bash
+xlight -dec 10 #减少百分之10的亮度
+xlight -inc 34 #增加百分之34的亮度
+xlight  #读取配置文件恢复指定的亮度
+```
 
 
