@@ -21,9 +21,8 @@
 
 1. 要想本脚本在linux和windows下都顺利执行的话，必须保证首先本文本的文件编码必须是cp936
 2. 其次本脚本的文字编码必须是unix
-3. 对于windows来说:必须安装MinGw或者CgyWin,另外windows xp的netsh有bug无法重启网卡所以,windows xp
-4. 还需要安装devcon(命令行程序),windows 7以及以上的必须以管理员权限运行mingw，或者把UAC调到最低
-5. 对于linux来说:必须安装resolvconf和ifupdown,当然百分之90概率你的系统自带了这两个命令,没有的话就`sudo apt-get install 包名`
+3. 对于windows来说:必须安装MinGw或者CgyWin,另外windows xp的netsh有bug无法重启网卡所以,windows xp还需要安装devcon(命令行程序),windows 7以及以上的必须以管理员权限运行mingw，或者把UAC调到最低
+4. 对于linux来说:必须安装resolvconf和ifupdown,当然百分之90概率你的系统自带了这两个命令,没有的话就`sudo apt-get install 包名`
 
 **截图** 
 
@@ -33,7 +32,7 @@
 
 这是我的电脑独立安装的最新版本的ubuntu的软件装机脚本。
 
-[直接查看脚本里面坐了些什么](software_install.sh)
+[直接查看脚本里面做了些什么](software_install.sh)
 
 ## si4lucid.sh
 
