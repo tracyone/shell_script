@@ -1,3 +1,5 @@
+#!/bin/bash
+# author:tracyone,tracyone@live.cn
 # file:software_install.sh
 # author:tracyone,tracyone@live.cn
 # date:2014-02-22/23:53:04
@@ -12,8 +14,9 @@ else
   is_64=0
 fi
 
+shopt -s expand_aliases
 read -p "请输入您的密码:" mypasswd
-alias sudo='echo ${mypasswd} | sudo -S'
+alias sudo="echo "${mypasswd}" | sudo -S"
 
 mkdir ./temp
 echo "添加仓库------------------------------------"
