@@ -26,7 +26,7 @@ beep() {
 	play ${bell_file} > /tmp/gif_record_tmp 2>&1  &
 }
 
-configure "sox byzanz-record"
+configure "sox byzanz-record xrectsel"
 
 if [[ $LANG == "zh_CN.UTF-8" ]]; then
 	if [[ ! -d "${HOME}/图片/gif_record" ]]; then
@@ -40,30 +40,65 @@ else
 	file_save="${HOME}/Pictures/gif_record"
 fi
 
-if [[ $# -gt 1 ]]; then
-	echo "Usage:$0 (the number of seconds to record)"
-	exit 3
-fi
 # Duration and output file
 if [ $# -gt 0 ]; then
-    D="--duration=$1 ${file_save}/$(date +%y%m%d%s).gif"
+    D="--duration=$2 ${file_save}/$(date +%y%m%d%s).gif"
 else
     D="--duration=10 ${file_save}/$(date +%y%m%d%s).gif"
+	# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
+	ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
+
+	echo Delaying $DELAY seconds. After that, byzanz will start
+	for (( i=$DELAY; i>0; --i )) ; do
+		echo $i
+		sleep 1
+	done
+	beep
+	byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+	beep
+	exit 0
 fi
-XWININFO=$(xwininfo)
-read X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
-read Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
-read W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
-read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
 
-echo Delaying $DELAY seconds. After that, byzanz will start
-for (( i=$DELAY; i>0; --i )) ; do
-    echo $i
-    sleep 1
-done
+if [[ $# -gt 2 ]]; then
+	echo "Usage:$0 -r|-w seconds"
+	exit 3
+else
+	case $1 in
+		'-r' )
+			# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
+			ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
 
-beep
-byzanz-record --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
-beep
+			echo Delaying $DELAY seconds. After that, byzanz will start
+			for (( i=$DELAY; i>0; --i )) ; do
+				echo $i
+				sleep 1
+			done
+			beep
+			byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+			beep
+			;;
+		'-w' )
+			XWININFO=$(xwininfo)
+			read X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
+			read Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
+			read W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
+			read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
+
+			echo Delaying $DELAY seconds. After that, byzanz will start
+			for (( i=$DELAY; i>0; --i )) ; do
+				echo $i
+				sleep 1
+			done
+			beep
+			byzanz-record --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
+			beep
+			;;
+		* )
+			echo "Usage:$0 -r|-w seconds"
+			exit 3
+			;;
+	esac
+fi
+
 echo "gif file is saved to ${file_save}/$(date +%y%m%d%s).gif"
 rm /tmp/gif_record_tmp
