@@ -32,73 +32,93 @@ if [[ $LANG == "zh_CN.UTF-8" ]]; then
 	if [[ ! -d "${HOME}/图片/gif_record" ]]; then
 		mkdir -p "${HOME}/图片/gif_record" 
 	fi
-	file_save="${HOME}/图片/gif_record"
+	file_save="${HOME}/图片/gif_record/$(date +%y%m%d%s).gif"
 else
 	if [[ ! -d "${HOME}/Pictures/gif_record" ]]; then
 		mkdir -p "${HOME}/Pictures/gif_record" 
 	fi
-	file_save="${HOME}/Pictures/gif_record"
+	file_save="${HOME}/Pictures/gif_record/$(date +%y%m%d%s).gif"
 fi
 
-# Duration and output file
-if [ $# -gt 0 ]; then
-    D="--duration=$2 ${file_save}/$(date +%y%m%d%s).gif"
-else
-    D="--duration=10 ${file_save}/$(date +%y%m%d%s).gif"
-	# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
-	ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
 
-	echo Delaying $DELAY seconds. After that, byzanz will start
-	for (( i=$DELAY; i>0; --i )) ; do
-		echo $i
-		sleep 1
-	done
-	beep
-	byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
-	beep
-	exit 0
-fi
+case $# in
+	'0' )
+		D="--duration=10 ${file_save}"
+		# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
+		ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
 
-if [[ $# -gt 2 ]]; then
+		echo Delaying $DELAY seconds. After that, byzanz will start
+		for (( i=$DELAY; i>0; --i )) ; do
+			echo $i
+			sleep 1
+		done
+		beep
+		byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+		beep
+		xdg-open ${file_save} 2> /tmp/gif_record_tmp
+		exit 0
+		;;
+	'1' )
+		D="--duration=10 ${file_save}"
+		# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
+		ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
+
+		echo Delaying $DELAY seconds. After that, byzanz will start
+		for (( i=$DELAY; i>0; --i )) ; do
+			echo $i
+			sleep 1
+		done
+		beep
+		byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+		beep
+		xdg-open ${file_save} 2> /tmp/gif_record_tmp
+		exit 0
+		;;
+	'2' )
+		D="--duration=$2 ${file_save}"
+		;;
+	* )
 	echo "Usage:$0 [-r|-w] [seconds]"
-	exit 3
-else
-	case $1 in
-		'-r' )
-			# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
-			ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
+	exit 1
+		;;
+esac
 
-			echo Delaying $DELAY seconds. After that, byzanz will start
-			for (( i=$DELAY; i>0; --i )) ; do
-				echo $i
-				sleep 1
-			done
-			beep
-			byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
-			beep
-			;;
-		'-w' )
-			XWININFO=$(xwininfo)
-			read X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
-			read Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
-			read W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
-			read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
+case $1 in
+	'-r' )
+		# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
+		ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
 
-			echo Delaying $DELAY seconds. After that, byzanz will start
-			for (( i=$DELAY; i>0; --i )) ; do
-				echo $i
-				sleep 1
-			done
-			beep
-			byzanz-record --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
-			beep
-			;;
-		* )
-			echo "Usage:$0 [-r|-w] [seconds]"
-			exit 3
-			;;
-	esac
-fi
+		echo Delaying $DELAY seconds. After that, byzanz will start
+		for (( i=$DELAY; i>0; --i )) ; do
+			echo $i
+			sleep 1
+		done
+		beep
+		byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+		beep
+		;;
+	'-w' )
+		XWININFO=$(xwininfo)
+		read X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
+		read Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
+		read W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
+		read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
 
-echo "gif file is saved to ${file_save}/$(date +%y%m%d%s).gif"
+		echo Delaying $DELAY seconds. After that, byzanz will start
+		for (( i=$DELAY; i>0; --i )) ; do
+			echo $i
+			sleep 1
+		done
+		beep
+		byzanz-record --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
+		beep
+		;;
+	* )
+		echo "Usage:$0 [-r|-w] [seconds]"
+		exit 3
+		;;
+esac
+
+echo "gif file is saved to ${file_save}"
+xdg-open ${file_save} 2> /tmp/gif_record_tmp
 rm /tmp/gif_record_tmp
