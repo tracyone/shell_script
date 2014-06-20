@@ -60,7 +60,7 @@ else
 fi
 
 if [[ $# -gt 2 ]]; then
-	echo "Usage:$0 -r|-w seconds"
+	echo "Usage:$0 [-r|-w] [seconds]"
 	exit 3
 else
 	case $1 in
@@ -94,7 +94,7 @@ else
 			beep
 			;;
 		* )
-			echo "Usage:$0 -r|-w seconds"
+			echo "Usage:$0 [-r|-w] [seconds]"
 			exit 3
 			;;
 	esac
