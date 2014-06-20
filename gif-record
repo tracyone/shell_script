@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Delay before starting
+DELAY=5
+
+function configure()
+{
+	local package_lack=""
+	for i in $1
+	do
+		which $i > /dev/null 2>&1
+		if [[ $? -ne 0 ]]; then
+			echo -e "Checking for $i ..... no"
+			package_lack="$i ${package_lack}"
+		fi
+	done	
+	if [[ ${package_lack} != "" ]]; then
+		echo "Please install ${package_lack} manually!"
+		exit 3
+	fi
+}
+
+bell_file=$(locate bell.oga)
+# Sound notification to let one know when recording is about to start (and ends)
+beep() {
+	play ${bell_file} 2>/dev/null &
+}
+
+configure "sox byzanz-record"
+
+if [[ $LANG == "zh_CN.UTF-8" ]]; then
+	if [[ ! -d "${HOME}/图片/gif_record" ]]; then
+		mkdir -p "${HOME}/图片/gif_record" 
+	fi
+	file_save="${HOME}/图片/gif_record"
+else
+	if [[ ! -d "${HOME}/Pictures/gif_record" ]]; then
+		mkdir -p "${HOME}/Pictures/gif_record" 
+	fi
+	file_save="${HOME}/Pictures/gif_record"
+fi
+
+if [[ $# -gt 1 ]]; then
+	echo "Usage:$0 (the number of seconds to record)"
+	exit 3
+fi
+# Duration and output file
+if [ $# -gt 0 ]; then
+    D="--duration=$1 ${file_save}/$(date +%y%m%d%s).gif"
+else
+    D="--duration=10 ${file_save}/$(date +%y%m%d%s).gif"
+fi
+XWININFO=$(xwininfo)
+read X < <(awk -F: '/Absolute upper-left X/{print $2}' <<< "$XWININFO")
+read Y < <(awk -F: '/Absolute upper-left Y/{print $2}' <<< "$XWININFO")
+read W < <(awk -F: '/Width/{print $2}' <<< "$XWININFO")
+read H < <(awk -F: '/Height/{print $2}' <<< "$XWININFO")
+
+echo Delaying $DELAY seconds. After that, byzanz will start
+for (( i=$DELAY; i>0; --i )) ; do
+    echo $i
+    sleep 1
+done
+
+beep
+byzanz-record --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
+beep
+echo "gif file is saved to ${file_save}/$(date +%y%m%d%s).gif"
