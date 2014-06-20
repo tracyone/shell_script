@@ -23,7 +23,7 @@ function configure()
 bell_file=$(locate bell.oga)
 # Sound notification to let one know when recording is about to start (and ends)
 beep() {
-	play ${bell_file} 2>/dev/null &
+	play ${bell_file} > /tmp/gif_record_tmp 2>&1  &
 }
 
 configure "sox byzanz-record"
@@ -66,3 +66,4 @@ beep
 byzanz-record --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
 beep
 echo "gif file is saved to ${file_save}/$(date +%y%m%d%s).gif"
+rm /tmp/gif_record_tmp
