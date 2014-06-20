@@ -62,6 +62,18 @@ xlight  #读取配置文件恢复指定的亮度
 3. 声音提示开始，声音提示结束
 4. 本人比较懒所以录制的文件是直接保存到家目录的图片文件夹(图片/Pictures)下的gif-record
 
+依赖:
+
+```bash
+sudo apt-get install sox byzanz -y
+git clone https://github.com/lolilolicon/FFcast2
+cd FFcast2
+make
+sudo cp xrectsel /usr/bin
+cd ..
+rm -rf FFCAST2
+```
+
 语法举例:
 
 ```bash
