@@ -59,7 +59,7 @@ case $# in
 		exit 0
 		;;
 	'1' )
-		D="--duration=10 ${file_save}"
+		D="--duration=$1 ${file_save}"
 		# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
 		ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
 
