@@ -1,11 +1,13 @@
+#!/bin/bash
 # file:si4lucid.sh
 # author:tracyone,tracyone@live.cn
 # date:2014-04-10/09:31:48
 # description:ubuntu 10.04 lucid lynx的装机脚本..
 # lastchange:2014-04-10/09:31:52
 
+shopt -s expand_aliases
 read -p "请输入您的密码:" mypasswd
-alias sudo='echo ${mypasswd} | sudo -S'
+alias sudo="echo "${mypasswd}" | sudo -S"
 
 sudo apt-get purge '^openoffice.org-.*' -y
 sudo apt-get purge ubuntuone-client -y
