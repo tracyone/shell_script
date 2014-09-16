@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # author:tracyone,tracyone@live.cn
 # description:
 	# 这个小脚本的功能快速切换切换网络配置，包括mac地址、IP地址和DNS。
