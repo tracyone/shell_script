@@ -1,4 +1,11 @@
 #!/bin/bash
+#author:tracyone
+#date:2015-05-15/18:01:15
+#usage:
+#gif-record [-r|-w] [seconds]
+#gif-record #直接录制默认录制时间是10秒,默认是选定区域进行录制
+#gif-record -w 20 #录制20秒,选择窗口进行录制
+#gif-record  20 #录制20秒,选择区域进行录制
 
 # Delay before starting
 DELAY=5
