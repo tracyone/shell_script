@@ -1,6 +1,31 @@
 #!/bin/bash
 # several common function of bash script
 
+# 参数1是执行的命令字符床
+function execute_check
+{
+	$1 
+	if [[  $? -eq 0 ]]; then
+		echo -e "\nExecute \"$1\" Successfully"
+	else
+		echo -e "\nExecute \"$1\" failed"
+	fi
+}
+
+# 参数1为提示字符串，参数2为y时执行的命令
+function GetYn
+{
+	local tmp
+	local regex="[yY]"
+	read -n1 -p "$1 [Y/n]" tmp
+	if [[  $tmp =~ $regex ]]; then
+		echo -e "\n$2"
+		execute_check "$2"
+	else
+		echo -e "\nNothing to do"
+	fi
+}
+
 # 类似我们编译众多linux软件源代码时configure程序的作用
 # 接受一个字符串参数，每个命令之间用空格隔开...
 function configure()
