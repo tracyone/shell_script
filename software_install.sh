@@ -56,22 +56,6 @@ git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=86400'
 git config --global core.editor vim
 
-echo "安装goagent..."
-sleep 3
-git clone https://github.com/goagent/goagent ./goagent
-sudo rm -rf /opt/goagent 
-sudo cp -a ./goagent /opt
-sudo chown -R $(whoami) /opt/goagent
-sudo chgrp -R $(whoami) /opt/goagent
-sudo apt-get -y install python-vte
-echo "配置goagent..."
-sleep 3
-python /opt/goagent/server/uploader.zip
-sudo sed -ie 's/^appid.*/appid = raoxiaowen1989|raoxiaowen1990|raoxiaowen1991|raoxiaowen1992/' /opt/goagent/local/proxy.ini
-echo "开机启动goagent..."
-sleep 3
-echo -e "python /opt/goagent/local/proxy.py" | sudo tee -a /etc/init.d/rc.local
-
 echo "安装compiz特效管理..."
 sleep 3
 sudo apt-get install compiz-plugins compiz-plugins-extra compizconfig-settings-manager -y
@@ -123,6 +107,8 @@ sudo apt-get skype -y
 sudo apt-get grive-tools -y
 sudo apt-get -y install dconf-editor
 sudo apt-get -y install gparted ubuntu-tweak
+echo "exfat support ..."
+sudo apt-get -y exfat-utils
 
 echo "嵌入式开发.."
 sudo apt-get install putty -y
