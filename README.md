@@ -2,9 +2,11 @@
 
 我自己做的一些脚本，大家有兴趣也可以拿去用。
 
-## backup_ub
+安装:
 
-这是一个当初备份这个ubuntu 10.04虚拟机的脚本使用的是tar备份，而还要处理grub，后来觉得很傻其实可以用dd的。
+```shell
+./install.sh
+```
 
 ## network_quick_switch
 
@@ -23,20 +25,6 @@
 2. 其次本脚本的文字编码必须是unix
 3. 对于windows来说:必须安装MinGw或者CgyWin,另外windows xp的netsh有bug无法重启网卡所以,windows xp还需要安装devcon(命令行程序),windows 7以及以上的必须以管理员权限运行mingw，或者把UAC调到最低
 4. 对于linux来说:必须安装resolvconf和ifupdown,当然百分之90概率你的系统自带了这两个命令,没有的话就`sudo apt-get install 包名`
-
-**截图** 
-
-
-
-## software_install.sh
-
-这是我的电脑独立安装的最新版本的ubuntu的软件装机脚本。
-
-[直接查看脚本里面做了些什么](software_install.sh)
-
-## si4lucid.sh
-
-这是上面对应功能脚本的ubuntu 10.04的版本。
 
 ## xlight
 
@@ -63,18 +51,6 @@ xlight  #读取配置文件恢复指定的亮度
 4. 本人比较懒所以录制的文件是直接保存到家目录的图片文件夹(图片/Pictures)下的gif-record
 5. 录制完毕之后自动打开录制的图片
 
-依赖:
-
-```bash
-sudo apt-get install sox byzanz -y
-git clone https://github.com/lolilolicon/FFcast2
-cd FFcast2
-make
-sudo cp xrectsel /usr/bin
-cd ..
-rm -rf FFCAST2
-```
-
 语法举例:
 
 ```bash
@@ -84,3 +60,17 @@ gif-record -w 20 #录制20秒,选择窗口进行录制
 gif-record  20 #录制20秒,选择区域进行录制
 ```
 
+# git_utils git 的一些集成动作
+
+ 根据指定正则 pattern删除本地和远程 tag.
+
+```
+Uasge: git_utils  [-d <tag name pattern>]
+```
+
+#  随机更换壁纸
+
+```
+“default wallpaper dir is ~/Pictures
+Uasge: chwall  [wallpaper directory]
+```
