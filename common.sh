@@ -29,6 +29,24 @@ function GetYn
 	fi
 }
 
+# GetOsType:
+# argument:none
+# return MAC,LINUX,MINGW,
+function GetOsType()
+{
+	local OS=$(uname)
+	local pattern='(MINGW|MSYS).*'
+	if [[ ${OS} =~ ${pattern} ]]; then
+		echo "MINGW"
+	elif [[ ${OS} =~ Darwin ]]; then
+		echo "MAC"
+	elif [[ ${OS} =~ Linux ]]; then
+		echo "LINUX"
+	else
+		echo "heh"
+	fi
+}
+
 # 类似我们编译众多linux软件源代码时configure程序的作用
 # 接受一个字符串参数，每个命令之间用空格隔开...
 function configure()
