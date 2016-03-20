@@ -27,7 +27,6 @@ function GitUtilsDeletTags()
 		exit 0;
 	fi
 	for i in ${tag}; do
-		echo "i is $i"
 		if [[ $i =~ ${pattern} ]]; then
 			GetYn "delete remote and local tag:$i " "git push origin :refs/tags/$i" "git tag -d $i" 
 		fi
