@@ -5,7 +5,7 @@
 PID=$(pgrep gnome-session)
 export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$PID/environ|cut -d= -f2-)
 
-DIR_WALLPAPER=/home/tracyone/Pictures/Wallpapers
+DIR_WALLPAPER=${HOME}/Pictures
 
 if [[ $1 != "" ]]; then
 	DIR_WALLPAPER=$1
