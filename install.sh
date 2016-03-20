@@ -1,11 +1,14 @@
 #!/bin/bash
 # install my shell script and dependence
 
-source ./common.sh
+source ./script_libs/common.sh
 
-sudo mkdir -p /usr/local/bin/script_lib
+sudo mkdir -p /usr/local/bin/script_libs
 sudo ln -sf $(pwd)/git_utils.sh /usr/local/bin/git_utils
-sudo ln -sf $(pwd)/common.sh /usr/local/bin/script_lib/
+libs=$(ls script_libs/)
+for i in $libs; do
+	sudo ln -sf $(pwd)/script_libs/$i /usr/local/bin/script_libs/$i
+done
 
 if [[ $(GetOsType) == "LINUX" ]]; then
 	sudo apt-get install sox byzanz -y

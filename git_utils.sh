@@ -4,7 +4,7 @@
 # date:2016-03-20
 # usage:
 
-source $(dirname $(which git_utils))/script_lib/common.sh
+source $(dirname $(which git_utils))/script_libs/common.sh
 
 # Function definition {{{
 # GitUtilsShowHelp:

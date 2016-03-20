@@ -10,7 +10,7 @@
 # Delay before starting
 DELAY=5
 
-source $(dirname $(which gif-record))/script_lib/common.sh
+source $(dirname $(which gif-record))/script_libs/common.sh
 
 bell_file=$(locate bell.oga)
 # Sound notification to let one know when recording is about to start (and ends)
