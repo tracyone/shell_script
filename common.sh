@@ -1,10 +1,10 @@
 #!/bin/bash
 # several common function of bash script
 
-# 参数1是执行的命令字符床
+# 参数1是执行的命令字符串
 function execute_check
 {
-	$1 
+	$1
 	if [[  $? -eq 0 ]]; then
 		echo -e "\nExecute \"$1\" Successfully"
 	else
@@ -18,9 +18,12 @@ function GetYn
 	local tmp
 	local regex="[yY]"
 	read -n1 -p "$1 [Y/n]" tmp
+	echo -e "\n"
 	if [[  $tmp =~ $regex ]]; then
-		echo -e "\n$2"
-		execute_check "$2"
+		for (( i = 1; i <= $#; i++ )); do
+			shift
+			execute_check "$1"
+		done
 	else
 		echo -e "\nNothing to do"
 	fi
