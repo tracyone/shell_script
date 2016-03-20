@@ -10,22 +10,7 @@
 # Delay before starting
 DELAY=5
 
-function configure()
-{
-	local package_lack=""
-	for i in $1
-	do
-		which $i > /dev/null 2>&1
-		if [[ $? -ne 0 ]]; then
-			echo -e "Checking for $i ..... no"
-			package_lack="$i ${package_lack}"
-		fi
-	done	
-	if [[ ${package_lack} != "" ]]; then
-		echo "Please install ${package_lack} manually!"
-		exit 3
-	fi
-}
+source $(dirname $(which gif-record))/script_lib/common.sh
 
 bell_file=$(locate bell.oga)
 # Sound notification to let one know when recording is about to start (and ends)
