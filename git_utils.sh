@@ -54,11 +54,4 @@ do
 		esac
 done
 
-case $1 in
-	"dtags" )
-		;;
-	* )
-		;;
-esac
-
 # vim: set ft=sh fdm=marker foldlevel=0 foldmarker&: 
