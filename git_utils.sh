@@ -11,7 +11,7 @@ source $(dirname $(which git_utils))/script_libs/common.sh
 # argument:none
 function GitUtilsShowHelp()
 {
-   echo "Usage: `basename $0` [-d <tag name pattern>]"
+   echo "Usage: `basename $0` [-d <tag name pattern>] [-i]"
    exit 3;
 }
 
@@ -35,17 +35,40 @@ function GitUtilsDeletTags()
 	git tag
 
 }
+
+# git init process
+function GitUtilsInit()
+{
+	local remote_url=""
+	if [[ ! -d .git ]]; then
+		git init .
+	fi
+	if [[ ! -f .gitignore  ]]; then
+		vim -p .gitignore readme.md
+	fi
+	git add .gitignore readme.md
+	git add .
+	git commit 
+	remote_url=`git config remote.origin.url` || read -p "Please input the remote repo url " remote_url
+	if [[ remote_url != "" ]]; then
+		git remote add origin ${remote_url}
+	fi
+}
+
 # }}}
 
 if [[ $# -eq 0 ]]; then
 	GitUtilsShowHelp
 fi
 
-while getopts "d:" arg #选项后面的冒号表示该选项需要参数
+while getopts "d:i" arg #选项后面的冒号表示该选项需要参数
 do
 		case $arg in
 			 d )
 				GitUtilsDeletTags "$OPTARG"
+				;;
+			 i )
+				GitUtilsInit "$OPTARG"
 				;;
 			* )
 				GitUtilsShowHelp
