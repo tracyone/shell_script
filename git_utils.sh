@@ -49,8 +49,9 @@ function GitUtilsInit()
 	git add .gitignore readme.md
 	git add .
 	git commit 
-	remote_url=`git config remote.origin.url` || read -p "Please input the remote repo url " remote_url
-	if [[ remote_url != "" ]]; then
+	remote_url=`git config remote.origin.url`
+	if [[ remote_url == "" ]]; then
+        read -p "Please input the remote repo url " remote_url
 		git remote add origin ${remote_url}
 	fi
 }
