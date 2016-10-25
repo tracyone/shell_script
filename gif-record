@@ -41,7 +41,7 @@ fi
 
 echo -e "\nPlease specify the region of gif!\n"
 
-if [[ $LANG == "zh_CN.UTF-8" ]]; then
+if [[ $LANGUAGE == "zh_CN:zh" ]]; then
 	if [[ ! -d "${HOME}/图片/gif_record" ]]; then
 		mkdir -p "${HOME}/图片/gif_record" 
 	fi
