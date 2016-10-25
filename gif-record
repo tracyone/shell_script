@@ -6,19 +6,40 @@
 #gif-record #直接录制默认录制时间是10秒,默认是选定区域进行录制
 #gif-record -w 20 #录制20秒,选择窗口进行录制
 #gif-record  20 #录制20秒,选择区域进行录制
+# xrectsel from https://github.com/lolilolicon/xrectsel
 
 # Delay before starting
 DELAY=5
 
 source $(dirname $(which gif-record))/script_libs/common.sh
 
-bell_file=$(locate bell.oga)
+bell_file=$(locate Amsterdam.ogg)
 # Sound notification to let one know when recording is about to start (and ends)
 beep() {
 	play ${bell_file} > /tmp/gif_record_tmp 2>&1  &
 }
 
+# echo_usage:
+# argument:none
+function echo_usage()
+{
+   echo -e "\nusage:gif-record [-r|-w] [seconds] [-h]\n"
+   echo -e "-r,region,specify the region of gif.(default)\n"
+   echo -e "-w,use current windows as the region of gif\n"
+   echo -e "-h,show this help\n"
+   echo -e "seconds:gif duration,( default is 10s )\n"
+}
+
 configure "sox byzanz-record xrectsel"
+
+clear_screen
+
+if [[ $1 == "-h" ]]; then
+		echo_usage
+		exit 0
+fi
+
+echo -e "\nPlease specify the region of gif!\n"
 
 if [[ $LANG == "zh_CN.UTF-8" ]]; then
 	if [[ ! -d "${HOME}/图片/gif_record" ]]; then
@@ -45,7 +66,7 @@ case $# in
 			sleep 1
 		done
 		beep
-		byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+		byzanz-record -c --verbose --delay=0 ${ARGUMENTS} $D
 		beep
 		xdg-open ${file_save} 2> /tmp/gif_record_tmp
 		exit 0
@@ -61,7 +82,7 @@ case $# in
 			sleep 1
 		done
 		beep
-		byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+		byzanz-record -c --verbose --delay=0 ${ARGUMENTS} $D
 		beep
 		xdg-open ${file_save} 2> /tmp/gif_record_tmp
 		exit 0
@@ -77,7 +98,6 @@ esac
 
 case $1 in
 	'-r' )
-		# xrectsel from https://github.com/lolilolicon/FFcast2/blob/master/xrectsel.c
 		ARGUMENTS=$(xrectsel "--x=%x --y=%y --width=%w --height=%h") || exit -1
 
 		echo Delaying $DELAY seconds. After that, byzanz will start
@@ -86,7 +106,7 @@ case $1 in
 			sleep 1
 		done
 		beep
-		byzanz-record --verbose --delay=0 ${ARGUMENTS} $D
+		byzanz-record -c --verbose --delay=0 ${ARGUMENTS} $D
 		beep
 		;;
 	'-w' )
@@ -102,7 +122,7 @@ case $1 in
 			sleep 1
 		done
 		beep
-		byzanz-record --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
+		byzanz-record -c --verbose --delay=0 --x=$X --y=$Y --width=$W --height=$H $D
 		beep
 		;;
 	* )
