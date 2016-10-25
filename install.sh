@@ -12,12 +12,14 @@ done
 
 if [[ $(GetOsType) == "LINUX" ]]; then
 	sudo apt-get install sox byzanz -y
-	git clone https://github.com/lolilolicon/FFcast2
-	cd FFcast2
-	make
-	sudo cp xrectsel /usr/bin
-	cd ..
-	rm -rf FFCAST2
+	which xrectsel
+	if [[ $? -ne 0 ]]; then
+		git clone https://github.com/lolilolicon/xrectsel || exit 3
+		cd xrectsel
+		./bootstrap &&./configure --prefix /usr && make && sudo make install
+		cd ..
+		rm -rf xrectsel
+	fi
 	sudo ln -sf $(pwd)/gif_record /usr/local/bin/gif_record
 	sudo ln -sf $(pwd)/chwall.sh /usr/local/bin/chwall
 fi
